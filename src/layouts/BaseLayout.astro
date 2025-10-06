@@ -4,47 +4,80 @@ import { CALCS } from '../data/calculators.js';
 import CookieConsent from '../components/CookieConsent.astro';
 
 const {
-  title = 'Calculadoras Rápidas',
-  description = 'Ferramentas online simples e precisas.',
+  title = 'Conta Rápida - Calculadoras Online',
+  description = 'Calculadoras online simples e rápidas para o dia a dia.',
 } = Astro.props;
 ---
 
 <html lang="pt">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Favicon e ícones -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
-    <link rel="icon" href="/favicon.ico">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2563eb">
-    <meta name="msapplication-TileColor" content="#2563eb">
-    <meta name="theme-color" content="#2563eb">
+  <title>{title}</title>
+  <meta name="description" content={description} />
 
-    <!-- SEO e compartilhamento -->
-    <meta property="og:title" content={title}>
-    <meta property="og:description" content={description}>
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://conta-rapida.com">
-    <meta property="og:image" content="/android-chrome-512x512.png">
-    <meta name="twitter:card" content="summary_large_image">
+  <!-- Favicon e ícones -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="theme-color" content="#2563eb">
 
-    <!-- Performance -->
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
-  
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0421373105939215"
-     crossorigin="anonymous">
-    </script>
+  <!-- SEO e compartilhamento -->
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://conta-rapida.com">
+  <meta property="og:image" content="/android-chrome-512x512.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
 
-  </head>
+  <!-- Performance -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+
+  <!-- Google tag (GA4) + Consent Mode (default: denied) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E1TZBLE3G1"></script>
+  <script is:inline>
+    // Consent Mode v2: tudo negado até o usuário aceitar no CookieConsent
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied'
+    });
+
+    gtag('js', new Date());
+    gtag('config', 'G-E1TZBLE3G1');
+
+    // Chamado pelo CookieConsent quando o usuário aceita
+    window.enableAnalyticsAndAds = function () {
+      gtag('consent', 'update', {
+        'ad_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted',
+        'analytics_storage': 'granted'
+      });
+    };
+  </script>
+
+  <!-- Google AdSense -->
+  <script
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0421373105939215"
+    crossorigin="anonymous">
+  </script>
+</head>
 
   <body>
     <CookieConsent />
@@ -53,11 +86,24 @@ const {
       <header class="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-gray-950/60 border-b border-gray-200/70 dark:border-gray-800">
         <div class="container flex items-center justify-between py-3 gap-4">
           <a href="/" class="flex items-center gap-2 no-underline">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="1.6"/>
-              <path d="M7 8h10M7 12h6M7 16h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <!-- Ícone de calculadora azul minimalista -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-blue-600 dark:text-blue-400"
+            >
+              <rect x="3" y="2" width="18" height="20" rx="3" />
+              <rect x="7" y="6" width="10" height="4" />
+              <path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01M16 17h.01" />
             </svg>
-            <span class="font-bold text-lg">Calculadoras Rápidas</span>
+            <span class="font-bold text-lg">Conta Rápida</span>
           </a>
 
           <!-- MENUS DESKTOP: rolagem horizontal -->
