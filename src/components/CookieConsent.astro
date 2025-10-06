@@ -1,13 +1,115 @@
 ---
-const hasConsent = typeof window !== "undefined" && localStorage.getItem("cookie_consent") === "true";
+/**
+ * CookieConsent.astro
+ * Banner simples de consentimento (GDPR/LGPD) integrado ao Consent Mode v2.
+ * - Grava em localStorage: cookie_consent = "granted" | "denied"
+ * - Ao aceitar: chama window.enableAnalyticsAndAds() (definido no <head>)
+ * - Ao recusar: mantém tudo negado e fecha o banner
+ */
 ---
-{!hasConsent && (
-  <div id="cookie-banner"
-       class="fixed bottom-0 inset-x-0 bg-gray-900 text-white text-sm p-3 flex flex-wrap justify-between items-center z-50">
-    <span>Usamos cookies para personalizar anúncios e analisar o tráfego. Consulte a <a href="/politica-privacidade/" class="underline">Política de Privacidade</a>.</span>
-    <div class="flex gap-2 mt-2 sm:mt-0">
-      <button class="bg-green-600 px-3 py-1 rounded" onclick="localStorage.setItem('cookie_consent','true');document.getElementById('cookie-banner').remove()">Aceitar</button>
-      <button class="bg-gray-700 px-3 py-1 rounded" onclick="document.getElementById('cookie-banner').remove()">Recusar</button>
+
+<style>
+  #cookie-banner {
+    position: fixed;
+    inset-block-end: 0; /* bottom */
+    inset-inline: 0;    /* left/right */
+    z-index: 9999;
+    background: rgba(17, 24, 39, 0.95); /* gray-900 */
+    color: white;
+    font-size: 0.9rem;
+    backdrop-filter: saturate(150%) blur(4px);
+    transform: translateY(100%);
+    animation: cr-slide-in 320ms ease forwards;
+  }
+  @keyframes cr-slide-in { to { transform: translateY(0); } }
+
+  #cookie-banner .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.9rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    #cookie-banner .wrap { grid-template-columns: 1fr; }
+  }
+
+  #cookie-banner a { text-decoration: underline; }
+  #cookie-banner .btn {
+    appearance: none;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 0.6rem;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+    background: transparent;
+    color: white;
+  }
+  #cookie-banner .btn-accept {
+    background: #2563eb; /* azul do site */
+    border-color: #2563eb;
+  }
+  #cookie-banner .btn:hover { filter: brightness(1.05); }
+</style>
+
+<div id="cookie-banner" role="region" aria-label="Consentimento de cookies" hidden>
+  <div class="wrap">
+    <div>
+      Usamos cookies para analisar o tráfego (GA4) e exibir anúncios (AdSense).
+      Você pode aceitar ou recusar. Leia a nossa
+      <a href="/politica-privacidade/">Política de Privacidade</a>.
+    </div>
+    <div class="flex gap-2 justify-end">
+      <button class="btn" id="cr-decline" type="button">Recusar</button>
+      <button class="btn btn-accept" id="cr-accept" type="button">Aceitar</button>
     </div>
   </div>
-)}
+</div>
+
+<script is:inline>
+  (function () {
+    try {
+      var KEY = 'cookie_consent';
+      var saved = localStorage.getItem(KEY);
+      var banner = document.getElementById('cookie-banner');
+      var acceptBtn = document.getElementById('cr-accept');
+      var declineBtn = document.getElementById('cr-decline');
+
+      // já tem escolha salva?
+      if (saved === 'granted') {
+        banner.remove();
+        if (typeof window.enableAnalyticsAndAds === 'function') {
+          // reaplica consentimento ao recarregar a página
+          window.enableAnalyticsAndAds();
+        }
+        return;
+      }
+      if (saved === 'denied') {
+        banner.remove(); // mantém tudo negado (default no <head>)
+        return;
+      }
+
+      // Sem escolha: mostra banner
+      banner.hidden = false;
+
+      acceptBtn.addEventListener('click', function () {
+        localStorage.setItem(KEY, 'granted');
+        if (typeof window.enableAnalyticsAndAds === 'function') {
+          window.enableAnalyticsAndAds();
+        }
+        banner.remove();
+      });
+
+      declineBtn.addEventListener('click', function () {
+        localStorage.setItem(KEY, 'denied');
+        // Mantém consent 'denied' (já configurado no <head>)
+        banner.remove();
+      });
+    } catch (e) {
+      // Em caso de bloqueio a storage, pelo menos não quebra a página
+      var b = document.getElementById('cookie-banner');
+      if (b) b.hidden = false;
+    }
+  })();
+</script>
