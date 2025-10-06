@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { CALCS } from '../data/calculators.js';
+import CookieConsent from '../components/CookieConsent.astro';
 
 const {
   title = 'Calculadoras Rápidas',
@@ -14,14 +15,39 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Favicon e ícones -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2563eb">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- SEO e compartilhamento -->
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://conta-rapida.com">
+    <meta property="og:image" content="/android-chrome-512x512.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Performance -->
     <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
-    {/* AdSense (adicione seu ID e descomente)
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-0421373105939215" crossorigin="anonymous"></script>
-    */}
+  
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0421373105939215"
+     crossorigin="anonymous">
+    </script>
+
   </head>
 
   <body>
+    <CookieConsent />
     <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-950">
       <!-- Header fixo -->
       <header class="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-gray-950/60 border-b border-gray-200/70 dark:border-gray-800">

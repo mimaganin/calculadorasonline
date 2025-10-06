@@ -1,0 +1,13 @@
+---
+const hasConsent = typeof window !== "undefined" && localStorage.getItem("cookie_consent") === "true";
+---
+{!hasConsent && (
+  <div id="cookie-banner"
+       class="fixed bottom-0 inset-x-0 bg-gray-900 text-white text-sm p-3 flex flex-wrap justify-between items-center z-50">
+    <span>Usamos cookies para personalizar anúncios e analisar o tráfego. Consulte a <a href="/politica-privacidade/" class="underline">Política de Privacidade</a>.</span>
+    <div class="flex gap-2 mt-2 sm:mt-0">
+      <button class="bg-green-600 px-3 py-1 rounded" onclick="localStorage.setItem('cookie_consent','true');document.getElementById('cookie-banner').remove()">Aceitar</button>
+      <button class="bg-gray-700 px-3 py-1 rounded" onclick="document.getElementById('cookie-banner').remove()">Recusar</button>
+    </div>
+  </div>
+)}
