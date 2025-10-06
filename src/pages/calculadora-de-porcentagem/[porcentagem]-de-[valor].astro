@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+  return [
+    { params: { porcentagem: '15', valor: '200' } },
+    { params: { porcentagem: '10', valor: '150' } },
+  ];
+}
+const { porcentagem, valor } = Astro.params;
+const res = (Number(porcentagem)/100) * Number(valor);
+const title = `${porcentagem}% de ${valor}`;
+---
+<Base {title} description={`Resultado de ${porcentagem}% de ${valor}.`}>
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <h1 class="text-2xl font-semibold mb-2">{title}</h1>
+  <p class="text-lg"><strong>= {res}</strong></p>
+  <p class="mt-4"><a href="/calculadora-de-porcentagem/">Calcular outro</a></p>
+</Base>

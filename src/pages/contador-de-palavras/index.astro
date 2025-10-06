@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+---
+
+<Base title="Contador de palavras e caracteres" description="Conte palavras e caracteres do seu texto online.">
+  <!-- CSS já importado no layout -->
+  <h1 class="text-2xl font-semibold mb-4">Contador de palavras e caracteres</h1>
+
+  <div class="form-wrap">
+    <textarea
+      id="txt"
+      rows="8"
+      class="input border rounded p-3 w-full"
+      placeholder="Cole seu texto aqui...">
+    </textarea>
+
+    <div id="saida" class="result">
+      0 palavras — 0 caracteres
+    </div>
+  </div>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Dica</h2>
+    <p>Útil para redações, redes sociais e metadescrições.</p>
+  </section>
+
+  <script is:inline>
+    const txtEl = document.getElementById('txt');
+    const saidaEl = document.getElementById('saida');
+
+    function count(t) {
+      const chars = t.length;
+      const words = (t.trim().match(/\S+/g) || []).length;
+      saidaEl.textContent = `${words} palavras — ${chars} caracteres`;
+    }
+
+    txtEl.addEventListener('input', (e) => count(e.target.value));
+  </script>
+  <CalculatorsGrid current={Astro.url.pathname} />
+</Base>

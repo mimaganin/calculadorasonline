@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import Ad from '../../components/AdSlot.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+---
+
+<Base title="Dias entre datas" description="Calcule a diferença de dias, semanas e meses entre duas datas.">
+  <!-- CSS já é importado no layout -->
+  <h1 class="text-2xl font-semibold mb-4">Dias entre datas</h1>
+
+  <form id="form-dias" class="form-wrap grid gap-3">
+    <label class="grid gap-1">
+      <span>Data inicial</span>
+      <input id="a" type="date" class="input border rounded p-2">
+    </label>
+
+    <label class="grid gap-1">
+      <span>Data final</span>
+      <input id="b" type="date" class="input border rounded p-2">
+    </label>
+
+    <button class="btn">Calcular</button>
+  </form>
+
+  <div id="saida" class="result"></div>
+
+  <Ad />
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Exemplo</h2>
+    <p>De 01/01/2025 até 31/12/2025 há 364 dias.</p>
+  </section>
+
+  <script is:inline>
+    document.getElementById('form-dias').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const a = document.getElementById('a').value;
+      const b = document.getElementById('b').value;
+
+      if (!a || !b) {
+        document.getElementById('saida').textContent = 'Selecione as duas datas.';
+        return;
+      }
+
+      const dataA = new Date(a + 'T00:00:00');
+      const dataB = new Date(b + 'T00:00:00');
+
+      const diffMs = Math.abs(dataB - dataA);
+      const days = Math.floor(diffMs / 86400000);
+      const weeks = (days / 7).toFixed(2);
+      const months = (days / 30.44).toFixed(1); // média de dias por mês
+
+      document.getElementById('saida').textContent =
+        `${days} dias (~${weeks} semanas ou ${months} meses)`;
+    });
+  </script>
+  <CalculatorsGrid current={Astro.url.pathname} />
+</Base>

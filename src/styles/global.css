@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  font-feature-settings: 'liga' 1, 'calt' 1;
+}
+
+.container {
+  @apply max-w-6xl mx-auto px-4;
+}
+
+.card {
+  @apply rounded-2xl shadow p-5 bg-white/70 dark:bg-gray-900/60 backdrop-blur;
+}
+
+a {
+  @apply text-blue-600 dark:text-blue-400 hover:underline;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* tipografia básica das páginas de conteúdo */
+.prose h2 { @apply text-xl font-semibold mt-6 mb-2; }
+.prose h3 { @apply text-lg font-semibold mt-4 mb-1; }
+.prose p  { @apply leading-relaxed; }
+
+/* Limita largura de formulários nas páginas internas */
+.form-wrap { @apply w-full max-w-md; }           /* ~ 28rem */
+.form-wrap-lg { @apply w-full max-w-lg; }        /* ~ 32rem, use quando precisar um pouco mais largo */
+.input { @apply w-full; }                        /* inputs ocupam só a largura da .form-wrap */
+.btn {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white;
+}
+
+.result {
+  @apply mt-4 text-2xl font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl px-4 py-3 text-center shadow-sm;
+  transition: all 0.2s ease-in-out;
+}
+.result:empty {
+  display: none;
+}
+

@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import Ad from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+
+const faqs = [
+  { question:'Como calcular idade em meses?', answer:'Use a diferença entre datas; nossa ferramenta mostra anos, meses e dias automaticamente.' },
+  { question:'Considera anos bissextos?', answer:'Sim. O cálculo trata meses com diferentes quantidades de dias e anos bissextos.' },
+];
+---
+
+<Base title="Calculadora de Idade" description="Descubra quantos anos, meses e dias você tem hoje.">
+ 
+  <h1 class="text-2xl font-semibold mb-4">Calcular idade</h1>
+
+  <form id="form-idade" class="form-wrap grid gap-3">
+    <label class="grid gap-1">
+      <span>Data de nascimento</span>
+      <input id="nasc" type="date" class="input border rounded p-2">
+    </label>
+    <button class="btn">Calcular</button>
+  </form>
+
+  <div id="saida" class="result"></div>
+
+  <Ad />
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Como funciona</h2>
+    <p>A calculadora de idade mostra quantos anos, meses e dias se passaram desde sua data de nascimento até hoje.</p>
+    <h3>Exemplo</h3>
+    <p>Quem nasceu em 23/08/1999 tem 26 anos, 1 mês e 13 dias em 06/10/2025.</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
+  <!-- Coloque o script DENTRO do <Base> e marque como inline -->
+  <script is:inline>
+    function diffYMD(from, to) {
+      let y = to.getFullYear() - from.getFullYear();
+      let m = to.getMonth() - from.getMonth();
+      let d = to.getDate() - from.getDate();
+      if (d < 0) {
+        const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+        d += prevMonth.getDate();
+        m -= 1;
+      }
+      if (m < 0) { m += 12; y -= 1; }
+      return { y, m, d };
+    }
+
+    document.getElementById('form-idade').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const nasc = document.getElementById('nasc').value;
+      if (!nasc) return;
+      const from = new Date(nasc + 'T00:00:00');
+      const to = new Date();
+      const { y, m, d } = diffYMD(from, to);
+      document.getElementById('saida').textContent = `${y} anos, ${m} meses e ${d} dias`;
+    });
+  </script>
+  <CalculatorsGrid current={Astro.url.pathname} />
+</Base>

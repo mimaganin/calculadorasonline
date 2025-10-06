@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import Ad from '../../components/AdSlot.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+---
+
+<Base title="Calculadora de Porcentagem" description="Quanto é X% de Y e outras variações.">
+  <!-- o CSS já é importado no layout -->
+  <h1 class="text-2xl font-semibold mb-4">Calcular porcentagem</h1>
+
+  <form id="form-porcentagem" class="form-wrap grid gap-3">
+    <label class="grid gap-1">
+      <span>Porcentagem (%)</span>
+      <input id="p" type="number" inputmode="decimal" step="0.01" placeholder="15" class="input border rounded p-2">
+    </label>
+
+    <label class="grid gap-1">
+      <span>De (valor)</span>
+      <input id="v" type="number" inputmode="decimal" step="0.01" placeholder="200" class="input border rounded p-2">
+    </label>
+
+    <button class="btn">Calcular</button>
+  </form>
+
+  <div id="saida" class="result"></div>
+
+  <Ad />
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Como funciona</h2>
+    <p>X% de Y = (X ÷ 100) × Y.</p>
+    <p>Exemplo: 15% de 200 = 30.</p>
+  </section>
+
+  <script is:inline>
+    document.getElementById('form-porcentagem').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const p = parseFloat(document.getElementById('p').value);
+      const v = parseFloat(document.getElementById('v').value);
+      if (isNaN(p) || isNaN(v)) {
+        document.getElementById('saida').textContent = 'Preencha os dois campos corretamente.';
+        return;
+      }
+      const resultado = (p / 100) * v;
+      document.getElementById('saida').textContent = `${p}% de ${v} = ${resultado.toFixed(2)}`;
+    });
+  </script>
+  <CalculatorsGrid current={Astro.url.pathname} />
+</Base>

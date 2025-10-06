@@ -1,0 +1,45 @@
+---
+/**
+ * Props:
+ *  faqs: Array<{ question: string; answer: string }>
+ */
+const { faqs = [] } = Astro.props;
+
+// JSON-LD para SEO
+const jsonLd = faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      })),
+    }
+  : null;
+---
+
+{faqs.length > 0 && (
+  <section class="mt-8">
+    <h2 class="text-xl font-semibold mb-3">Perguntas frequentes</h2>
+
+    <div class="space-y-2">
+      {faqs.map((f) => (
+        <details class="group rounded-lg border border-gray-200 dark:border-gray-800 p-3">
+          <summary class="cursor-pointer font-medium list-none">
+            {f.question}
+          </summary>
+          <div class="mt-2 opacity-90 prose dark:prose-invert">
+            <p set:html={f.answer}></p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+)}
+
+{jsonLd && (
+  <script type="application/ld+json">
+    {JSON.stringify(jsonLd)}
+  </script>
+)}

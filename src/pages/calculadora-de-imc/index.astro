@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import Ad from '../../components/AdSlot.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+---
+
+<Base title="Calculadora de IMC" description="Calcule seu Índice de Massa Corporal rapidamente.">
+
+  <h1 class="text-2xl font-semibold mb-4">Calculadora de IMC</h1>
+
+  <form id="form-imc" class="form-wrap grid gap-3">
+    <label class="grid gap-1">
+      <span>Altura (m)</span>
+      <input id="altura" type="number" inputmode="decimal" step="0.01" placeholder="1.75" class="input border rounded p-2">
+    </label>
+
+    <label class="grid gap-1">
+      <span>Peso (kg)</span>
+      <input id="peso" type="number" inputmode="decimal" step="0.1" placeholder="70" class="input border rounded p-2">
+    </label>
+
+    <button class="btn">Calcular</button>
+  </form>
+
+  <div id="saida" class="result"></div>
+
+  <Ad />
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>O que é IMC</h2>
+    <p>IMC = peso ÷ (altura × altura). Exemplo: 70 ÷ (1,75²) = 22,9.</p>
+    <ul>
+      <li>Abaixo de 18,5 → Abaixo do peso</li>
+      <li>18,5 a 24,9 → Peso normal</li>
+      <li>25 a 29,9 → Sobrepeso</li>
+      <li>30+ → Obesidade</li>
+    </ul>
+  </section>
+
+  <script is:inline>
+    function categoria(imc){
+      if (imc < 18.5) return 'Abaixo do peso';
+      if (imc < 25)   return 'Peso normal';
+      if (imc < 30)   return 'Sobrepeso';
+      return 'Obesidade';
+    }
+
+    document.getElementById('form-imc').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const h = parseFloat(document.getElementById('altura').value);
+      const p = parseFloat(document.getElementById('peso').value);
+      if (!h || !p || h <= 0) return;
+
+      const imc = p / (h * h);
+      document.getElementById('saida').textContent = `IMC: ${imc.toFixed(1)} — ${categoria(imc)}`;
+    });
+  </script>
+  <CalculatorsGrid current={Astro.url.pathname} />
+</Base>

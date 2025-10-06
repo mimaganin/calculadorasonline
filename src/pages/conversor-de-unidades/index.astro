@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+---
+
+<Base title="Conversor de Unidades" description="Converta entre km, m, cm e mm.">
+  <!-- CSS já é importado pelo layout -->
+  <h1 class="text-2xl font-semibold mb-4">Conversor de unidades (comprimento)</h1>
+
+  <form id="form-unidades" class="form-wrap grid gap-3">
+    <label class="grid gap-1">
+      <span>Valor</span>
+      <input
+        id="val"
+        type="number"
+        inputmode="decimal"
+        step="0.0001"
+        placeholder="1.5"
+        class="input border rounded p-2"
+      >
+    </label>
+
+    <label class="grid gap-1">
+      <span>De</span>
+      <select id="from" class="input border rounded p-2">
+        <option>km</option>
+        <option>m</option>
+        <option>cm</option>
+        <option>mm</option>
+      </select>
+    </label>
+
+    <label class="grid gap-1">
+      <span>Para</span>
+      <select id="to" class="input border rounded p-2">
+        <option>m</option>
+        <option>km</option>
+        <option>cm</option>
+        <option>mm</option>
+      </select>
+    </label>
+
+    <button class="btn">Converter</button>
+  </form>
+
+  <div id="saida" class="result"></div>
+
+  <script is:inline>
+    const factor = { km: 1000, m: 1, cm: 0.01, mm: 0.001 };
+
+    function toMeters(v, unit) {
+      return v * factor[unit];
+    }
+
+    function fromMeters(v, unit) {
+      return v / factor[unit];
+    }
+
+    document.getElementById('form-unidades').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const v = parseFloat(document.getElementById('val').value);
+      const f = document.getElementById('from').value;
+      const t = document.getElementById('to').value;
+
+      if (isNaN(v)) {
+        document.getElementById('saida').textContent = 'Informe um valor válido.';
+        return;
+      }
+
+      const meters = toMeters(v, f);
+      const res = fromMeters(meters, t);
+      document.getElementById('saida').textContent = `${res.toFixed(4)} ${t}`;
+    });
+  </script>
+  <CalculatorsGrid current={Astro.url.pathname} />
+</Base>

@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+  return [
+    { params: { data1: '2025-01-01', data2: '2025-12-31' } },
+  ];
+}
+const { data1, data2 } = Astro.params;
+const a = new Date(data1 + 'T00:00:00Z');
+const b = new Date(data2 + 'T00:00:00Z');
+const days = Math.floor(Math.abs(b.getTime() - a.getTime()) / 86400000);
+const title = `Dias entre ${data1} e ${data2}`;
+---
+<Base {title} description={`Diferença de dias entre ${data1} e ${data2}.`}>
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <h1 class="text-2xl font-semibold mb-2">{title}</h1>
+  <p class="text-lg"><strong>{days} dias</strong></p>
+  <p class="mt-4"><a href="/dias-entre-datas/">Calcular outras datas</a></p>
+</Base>

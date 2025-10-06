@@ -1,0 +1,82 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import Ad from '../../components/AdSlot.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+---
+
+<Base title="Conversor de Temperatura" description="Converta entre Celsius, Fahrenheit e Kelvin.">
+  
+  <h1 class="text-2xl font-semibold mb-4">Conversor de temperatura</h1>
+
+  <form id="form-temp" class="form-wrap grid gap-3">
+    <label class="grid gap-1">
+      <span>Valor</span>
+      <input
+        id="val"
+        type="number"
+        inputmode="decimal"
+        step="0.01"
+        placeholder="30"
+        class="input border rounded p-2"
+      >
+    </label>
+
+    <label class="grid gap-1">
+      <span>De</span>
+      <select id="from" class="input border rounded p-2">
+        <option>Celsius</option>
+        <option>Fahrenheit</option>
+        <option>Kelvin</option>
+      </select>
+    </label>
+
+    <label class="grid gap-1">
+      <span>Para</span>
+      <select id="to" class="input border rounded p-2">
+        <option>Fahrenheit</option>
+        <option>Celsius</option>
+        <option>Kelvin</option>
+      </select>
+    </label>
+
+    <button class="btn">Converter</button>
+  </form>
+
+  <div id="saida" class="result"></div>
+
+  <Ad />
+
+  <script is:inline>
+    // Funções auxiliares
+    function c2f(c) { return (c * 9 / 5) + 32; }
+    function f2c(f) { return (f - 32) * 5 / 9; }
+    function c2k(c) { return c + 273.15; }
+    function k2c(k) { return k - 273.15; }
+
+    document.getElementById('form-temp').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const v = parseFloat(document.getElementById('val').value);
+      const f = document.getElementById('from').value;
+      const t = document.getElementById('to').value;
+      if (isNaN(v)) {
+        document.getElementById('saida').textContent = 'Informe um valor numérico válido.';
+        return;
+      }
+
+      // converte primeiro para Celsius
+      let c;
+      if (f === 'Celsius') c = v;
+      else if (f === 'Fahrenheit') c = f2c(v);
+      else c = k2c(v);
+
+      // converte de Celsius para o destino
+      let res;
+      if (t === 'Celsius') res = c;
+      else if (t === 'Fahrenheit') res = c2f(c);
+      else res = c2k(c);
+
+      document.getElementById('saida').textContent = `${res.toFixed(2)} ${t}`;
+    });
+  </script>
+  <CalculatorsGrid current={Astro.url.pathname} />
+</Base>

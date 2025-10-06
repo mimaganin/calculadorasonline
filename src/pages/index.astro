@@ -1,0 +1,107 @@
+---
+import Base from '../layouts/BaseLayout.astro';
+import Ad from '../components/AdSlot.astro';
+
+const items = [
+  { href: '/calculadora-de-idade/', title: 'Idade', desc: 'Anos, meses e dias', icon: '🎂' },
+  { href: '/calculadora-de-imc/', title: 'IMC', desc: 'Índice de massa corporal', icon: '⚖️' },
+  { href: '/calculadora-de-porcentagem/', title: 'Porcentagem', desc: 'Quanto é X% de Y', icon: '💯' },
+  { href: '/dias-entre-datas/', title: 'Dias entre datas', desc: 'Diferença em dias', icon: '📆' },
+  { href: '/conversor-de-temperatura/', title: 'Temperatura', desc: 'Celsius, Fahrenheit, Kelvin', icon: '🌡️' },
+  { href: '/conversor-de-unidades/', title: 'Unidades', desc: 'Comprimento, peso, volume', icon: '📏' },
+  { href: '/regra-de-tres/', title: 'Regra de três', desc: 'Proporções simples', icon: '➗' },
+  { href: '/conversor-de-horas/', title: 'Horas', desc: 'Horas ⇄ minutos ⇄ segundos', icon: '🕒' },
+  { href: '/contador-de-palavras/', title: 'Palavras', desc: 'Contador de palavras/caracteres', icon: '✍️' },
+  { href: '/calculadora-de-juros/', title: 'Juros', desc: 'Simples e compostos', icon: '💰' },
+];
+---
+
+<Base title="Calculadoras Rápidas – Ferramentas online" description="Calculadoras evergreen com foco em velocidade, precisão e privacidade.">
+  <!-- Hero -->
+  <section class="mb-6">
+    <h1 class="text-3xl font-bold tracking-tight">Calculadoras rápidas, sem complicação</h1>
+    <p class="mt-2 text-sm opacity-75">Ferramentas úteis para o dia a dia.</p>
+  </section>
+
+  <!-- Ad no topo do conteúdo -->
+  <div class="mb-4">
+    <!-- <Ad slotId="HOME_TOP" /> -->
+    <div style="min-height:90px" class="rounded-xl bg-gray-100 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-xs opacity-60">
+      Espaço para anúncio responsivo
+    </div>
+  </div>
+
+  <!-- Calculadora destaque: Idade (sem onsubmit inline) -->
+  <section class="mt-4">
+    <h2 class="text-xl font-semibold mb-3 flex items-center gap-2">🎯 Calculadora de Idade (destaque)</h2>
+    <form id="form-idade-home" class="form-wrap grid gap-3 sm:grid-cols-[1fr_auto] items-end">
+      <label class="grid gap-1">
+        <span class="text-sm">Data de nascimento</span>
+        <input id="nasc-home" type="date" class="input border rounded p-2 w-full">
+      </label>
+      <button class="btn">Calcular</button>
+    </form>
+    <div id="saida-home" class="result"></div>
+
+    <details class="mt-3 text-sm open:pb-2">
+      <summary class="cursor-pointer opacity-80">Como calculamos?</summary>
+      <p class="mt-2 opacity-80">
+        Consideramos a diferença entre a data de hoje e a data informada, tratando meses com durações diferentes e anos bissextos.
+      </p>
+    </details>
+  </section>
+
+  <!-- Menu visual para as demais -->
+  <section class="mt-8">
+    <h2 class="text-xl font-semibold mb-3">Outras calculadoras</h2>
+    <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map(i => (
+        <li class="group p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:shadow-sm transition">
+          <a href={i.href} class="no-underline block">
+            <div class="flex items-start gap-3">
+              <div class="text-2xl">{i.icon}</div>
+              <div>
+                <h3 class="font-semibold group-hover:underline">{i.title}</h3>
+                <p class="text-sm opacity-70">{i.desc}</p>
+              </div>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Ad no fim do conteúdo -->
+  <div class="mt-8">
+    <!-- <Ad slotId="HOME_BOTTOM" /> -->
+    <div style="min-height:90px" class="rounded-xl bg-gray-100 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-xs opacity-60">
+      Espaço para anúncio responsivo
+    </div>
+  </div>
+
+  <!-- Script precisa ficar dentro do <Base> -->
+  <script is:inline>
+    function diffYMD(from, to) {
+      let y = to.getFullYear() - from.getFullYear();
+      let m = to.getMonth() - from.getMonth();
+      let d = to.getDate() - from.getDate();
+      if (d < 0) {
+        const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+        d += prevMonth.getDate();
+        m -= 1;
+      }
+      if (m < 0) { m += 12; y -= 1; }
+      return { y, m, d };
+    }
+
+    document.getElementById('form-idade-home').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nasc = document.getElementById('nasc-home').value;
+      if (!nasc) return;
+      const from = new Date(nasc + 'T00:00:00');
+      const to = new Date();
+      const { y, m, d } = diffYMD(from, to);
+      document.getElementById('saida-home').textContent = `${y} anos, ${m} meses e ${d} dias`;
+    });
+  </script>
+</Base>

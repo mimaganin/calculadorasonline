@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+---
+
+<Base title="Conversor de horas" description="Converta horas em minutos e segundos facilmente.">
+  <!-- CSS já é importado pelo layout -->
+  <h1 class="text-2xl font-semibold mb-4">Conversor de horas</h1>
+
+  <form id="form-horas" class="form-wrap grid gap-3">
+    <label class="grid gap-1">
+      <span>Horas</span>
+      <input
+        id="h"
+        type="number"
+        inputmode="decimal"
+        step="0.01"
+        placeholder="1.5"
+        class="input border rounded p-2"
+      >
+    </label>
+    <button class="btn">Converter</button>
+  </form>
+
+  <div id="saida" class="result"></div>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Exemplo</h2>
+    <p>1h 30min = 90 minutos = 5400 segundos.</p>
+  </section>
+
+  <script is:inline>
+    document.getElementById('form-horas').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const h = parseFloat(document.getElementById('h').value);
+      if (isNaN(h) || h < 0) {
+        document.getElementById('saida').textContent = 'Informe um valor válido em horas.';
+        return;
+      }
+      const min = h * 60;
+      const sec = min * 60;
+      document.getElementById('saida').textContent = `${min.toFixed(2)} minutos — ${sec.toFixed(0)} segundos`;
+    });
+  </script>
+  <CalculatorsGrid current={Astro.url.pathname} />
+</Base>

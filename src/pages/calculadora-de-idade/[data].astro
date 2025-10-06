@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+  
+  return [
+    { params: { data: '2000-01-01' } },
+    { params: { data: '1999-08-23' } },
+  ];
+}
+const { data } = Astro.params;
+function diffYMD(from, to) {
+  let y = to.getUTCFullYear() - from.getUTCFullYear();
+  let m = to.getUTCMonth() - from.getUTCMonth();
+  let d = to.getUTCDate() - from.getUTCDate();
+  if (d < 0) {
+    const prevMonth = new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), 0));
+    d += prevMonth.getUTCDate();
+    m -= 1;
+  }
+  if (m < 0) { m += 12; y -= 1; }
+  return {y,m,d};
+}
+const parsed = new Date(data + 'T00:00:00Z');
+const now = new Date();
+const res = diffYMD(parsed, now);
+const title = `Idade de quem nasceu em ${data}`;
+---
+<Base {title} description={`Veja a idade de quem nasceu em ${data}, em anos, meses e dias.`}>
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <h1 class="text-2xl font-semibold mb-4">{title}</h1>
+  <p class="text-lg">Resultado agora: <strong>{res.y} anos, {res.m} meses e {res.d} dias</strong>.</p>
+  <p class="mt-4"><a href="/calculadora-de-idade/">Calcular outra data</a></p>
+</Base>

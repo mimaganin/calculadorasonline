@@ -1,0 +1,103 @@
+---
+import '../styles/global.css';
+import { CALCS } from '../data/calculators.js';
+
+const {
+  title = 'Calculadoras Rápidas',
+  description = 'Ferramentas online simples e precisas.',
+} = Astro.props;
+---
+
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+    {/* AdSense (adicione seu ID e descomente)
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-0421373105939215" crossorigin="anonymous"></script>
+    */}
+  </head>
+
+  <body>
+    <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-950">
+      <!-- Header fixo -->
+      <header class="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-gray-950/60 border-b border-gray-200/70 dark:border-gray-800">
+        <div class="container flex items-center justify-between py-3 gap-4">
+          <a href="/" class="flex items-center gap-2 no-underline">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M7 8h10M7 12h6M7 16h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <span class="font-bold text-lg">Calculadoras Rápidas</span>
+          </a>
+
+          <!-- MENUS DESKTOP: rolagem horizontal -->
+          <div class="hidden md:block overflow-x-auto no-scrollbar">
+            <nav class="flex items-center gap-3 text-sm whitespace-nowrap">
+              {CALCS.map(i => (
+                <a class="hover:underline" href={i.href}>{i.title}</a>
+              ))}
+            </nav>
+          </div>
+
+          <button
+            class="md:hidden p-2 rounded-lg border border-gray-200 dark:border-gray-800"
+            onclick="document.getElementById('mnav').classList.toggle('hidden')"
+            aria-label="Abrir menu">
+            ☰
+          </button>
+        </div>
+
+        <!-- Mobile nav (lista completa) -->
+        <div id="mnav" class="md:hidden hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+          <div class="container grid grid-cols-2 gap-2 py-3 text-sm">
+            {CALCS.map(i => (<a href={i.href}>{i.title}</a>))}
+          </div>
+        </div>
+      </header>
+
+      <!-- Grid principal -->
+      <main class="container py-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <article class="card">
+          <slot />
+        </article>
+
+        <!-- Sidebar: todas as calculadoras + anúncio -->
+        <aside class="space-y-4">
+          <section class="card">
+            <h3 class="font-semibold mb-2">Todas as calculadoras</h3>
+            <ul class="grid grid-cols-1 gap-1 text-sm max-h-80 overflow-auto no-scrollbar pr-1">
+              {CALCS.map(i => (
+                <li><a href={i.href}>{i.icon} {i.title}</a></li>
+              ))}
+            </ul>
+          </section>
+
+          <!-- Ad slot da sidebar -->
+          <section class="card">
+            <div style="min-height:250px" class="flex items-center justify-center text-xs opacity-60">
+              <!-- Substitua por <AdSlot slotId="SIDEBAR" /> quando ativar -->
+              Espaço para anúncio 300×250
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="mt-2 pb-10 text-center text-sm opacity-70">
+        <p>© {new Date().getFullYear()} Calculadoras Rápidas · <a href="/sobre/">Sobre</a> · <a href="/politica-privacidade/">Privacidade</a></p>
+      </footer>
+    </div>
+
+    <script>
+      // Dark mode conforme preferência do sistema
+      (function(){
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        document.documentElement.classList.toggle('dark', mq.matches);
+        mq.addEventListener('change', e => document.documentElement.classList.toggle('dark', e.matches));
+      })();
+    </script>
+  </body>
+</html>
