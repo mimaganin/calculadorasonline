@@ -1,10 +1,10 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+import AdSlot from '../../components/AdSlot.astro';
 ---
 
 <Base title="Conversor de Unidades" description="Converta entre km, m, cm e mm.">
-  <!-- CSS já é importado pelo layout -->
   <h1 class="text-2xl font-semibold mb-4">Conversor de unidades (comprimento)</h1>
 
   <form id="form-unidades" class="form-wrap grid gap-3">
@@ -44,6 +44,8 @@ import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
   </form>
 
   <div id="saida" class="result"></div>
+
+  <AdSlot slotId="6940589775" />
 
   <script is:inline>
     const factor = { km: 1000, m: 1, cm: 0.01, mm: 0.001 };

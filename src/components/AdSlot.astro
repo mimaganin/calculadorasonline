@@ -1,15 +1,16 @@
 ---
-const { slotId = 'AUTO' } = Astro.props;
+const { slotId } = Astro.props;
 ---
 
-<div class="my-6 w-full flex justify-center">
+<div class="my-6">
   <ins class="adsbygoogle"
-       style="display:block;min-height:90px"
-       data-ad-client="ca-pub-XXXXXXXXXXXX"
-       data-ad-slot={slotId}
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
+    style="display:block"
+    data-ad-client="ca-pub-0421373105939215"
+    data-ad-slot={slotId}
+    data-ad-format="auto"
+    data-full-width-responsive="true"></ins>
 </div>
-<script>
-  (window.adsbygoogle = window.adsbygoogle || []).push({});
+
+<script is:inline>
+  (adsbygoogle = window.adsbygoogle || []).push({});
 </script>

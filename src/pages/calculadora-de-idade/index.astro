@@ -3,6 +3,7 @@ import Base from '../../layouts/BaseLayout.astro';
 import Ad from '../../components/AdSlot.astro';
 import Faq from '../../components/FaqSchema.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+import AdSlot from '../../components/AdSlot.astro';
 
 const faqs = [
   { question:'Como calcular idade em meses?', answer:'Use a diferença entre datas; nossa ferramenta mostra anos, meses e dias automaticamente.' },
@@ -24,7 +25,7 @@ const faqs = [
 
   <div id="saida" class="result"></div>
 
-  <Ad />
+  <AdSlot slotId="6940589775" />
 
   <section class="prose dark:prose-invert mt-6">
     <h2>Como funciona</h2>

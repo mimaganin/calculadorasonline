@@ -1,10 +1,10 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+import AdSlot from '../../components/AdSlot.astro';
 ---
 
 <Base title="Conversor de horas" description="Converta horas em minutos e segundos facilmente.">
-  <!-- CSS já é importado pelo layout -->
   <h1 class="text-2xl font-semibold mb-4">Conversor de horas</h1>
 
   <form id="form-horas" class="form-wrap grid gap-3">
@@ -23,6 +23,8 @@ import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
   </form>
 
   <div id="saida" class="result"></div>
+
+  <AdSlot slotId="6940589775" />
 
   <section class="prose dark:prose-invert mt-6">
     <h2>Exemplo</h2>

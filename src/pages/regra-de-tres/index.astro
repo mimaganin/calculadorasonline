@@ -1,10 +1,10 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+import AdSlot from '../../components/AdSlot.astro';
 ---
 
 <Base title="Regra de três" description="Proporções simples: encontre o valor desconhecido.">
-  <!-- CSS já é importado pelo layout -->
   <h1 class="text-2xl font-semibold mb-4">Calculadora de regra de três</h1>
 
   <form id="form-regra" class="form-wrap grid gap-3">
@@ -53,6 +53,8 @@ import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 
     <button class="btn">Calcular</button>
   </form>
+
+  <AdSlot slotId="6940589775" />
 
   <section class="prose dark:prose-invert mt-6">
     <h2>Exemplo</h2>

@@ -2,10 +2,10 @@
 import Base from '../../layouts/BaseLayout.astro';
 import Ad from '../../components/AdSlot.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+import AdSlot from '../../components/AdSlot.astro';
 ---
 
 <Base title="Dias entre datas" description="Calcule a diferença de dias, semanas e meses entre duas datas.">
-  <!-- CSS já é importado no layout -->
   <h1 class="text-2xl font-semibold mb-4">Dias entre datas</h1>
 
   <form id="form-dias" class="form-wrap grid gap-3">
@@ -24,7 +24,7 @@ import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 
   <div id="saida" class="result"></div>
 
-  <Ad />
+  <AdSlot slotId="6940589775" />
 
   <section class="prose dark:prose-invert mt-6">
     <h2>Exemplo</h2>
