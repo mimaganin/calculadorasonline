@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/BaseLayout.astro';
-import Ad from '../components/AdSlot.astro';
+import AdSlot from '../components/AdSlot.astro';
 
 const items = [
   { href: '/calculadora-de-idade/', title: 'Idade', desc: 'Anos, meses e dias', icon: '🎂' },
@@ -16,7 +16,7 @@ const items = [
 ];
 ---
 
-<Base title="Conta Rápida – Calculadoras Online" description="Calculadoras rápidas para o dia a dia.">
+<Base title="Calculadoras Online - Conta Rápida" description="Calculadoras Online Rápidas, Sem Complicação">
   <!-- Hero -->
   <section class="mb-6 text-center sm:text-left">
     <div class="flex items-center justify-center sm:justify-start gap-2 mb-2">
@@ -37,19 +37,18 @@ const items = [
         <path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01M16 17h.01" />
       </svg>
       <h1 class="text-3xl font-bold tracking-tight text-white">
-        Calculadoras rápidas, sem complicação
+        Calculadoras Online Rápidas, Sem Complicação
       </h1>
     </div>
     <p class="mt-2 text-sm opacity-80 text-white/90">
-      Ferramentas úteis para o dia a dia.
+      Descubra nossas ferramentas úteis, como calculadora de idade, IMC e muito mais!
     </p>
   </section>
 
   <!-- Ad no topo do conteúdo -->
   <div class="mb-4">
-    <!-- <Ad slotId="HOME_TOP" /> -->
-    <div style="min-height:90px" class="rounded-xl bg-gray-100 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-xs opacity-60">
-      Espaço para anúncio responsivo
+    <div style="min-height:90px" class="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 p-2">
+      <AdSlot slotId="3228575471" />
     </div>
   </div>
 

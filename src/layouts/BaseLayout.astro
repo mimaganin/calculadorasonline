@@ -2,10 +2,11 @@
 import '../styles/global.css';
 import { CALCS } from '../data/calculators.js';
 import CookieConsent from '../components/CookieConsent.astro';
+import AdSlot from '../components/AdSlot.astro';
 
 const {
-  title = 'Conta Rápida - Calculadoras Online',
-  description = 'Calculadoras online simples e rápidas para o dia a dia.',
+  title = 'Calculadoras Online - Conta Rápida',
+  description = 'Calculadoras online para facilitar seu dia a dia: idade, IMC, juros e mais!',
 } = Astro.props;
 ---
 
@@ -150,9 +151,8 @@ const {
 
           <!-- Ad slot da sidebar -->
           <section class="card">
-            <div style="min-height:250px" class="flex items-center justify-center text-xs opacity-60">
-              <!-- Substitua por <AdSlot slotId="SIDEBAR" /> quando ativar -->
-              Espaço para anúncio 300×250
+            <div style="min-height:250px" class="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 p-2">
+              <AdSlot slotId="6940589775" />
             </div>
           </section>
         </aside>
