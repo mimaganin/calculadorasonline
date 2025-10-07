@@ -1,10 +1,10 @@
 ---
 /**
  * CookieConsent.astro
- * Banner simples de consentimento (GDPR/LGPD) integrado ao Consent Mode v2.
+ * Banner simples de consentimento (fallback fora da UE), compatível com a CMP do Google (Funding Choices).
  * - Grava em localStorage: cookie_consent = "granted" | "denied"
- * - Ao aceitar: chama window.enableAnalyticsAndAds() (definido no <head>)
- * - Ao recusar: mantém tudo negado e fecha o banner
+ * - Só chama window.enableAnalyticsAndAds() quando a CMP NÃO estiver ativa.
+ * - Se a CMP estiver ativa (iframe "googlefcPresent"), este banner não aparece.
  */
 ---
 
@@ -69,47 +69,73 @@
 
 <script is:inline>
   (function () {
-    try {
-      var KEY = 'cookie_consent';
-      var saved = localStorage.getItem(KEY);
-      var banner = document.getElementById('cookie-banner');
-      var acceptBtn = document.getElementById('cr-accept');
-      var declineBtn = document.getElementById('cr-decline');
+    var KEY = 'cookie_consent';
 
-      // já tem escolha salva?
-      if (saved === 'granted') {
-        banner.remove();
-        if (typeof window.enableAnalyticsAndAds === 'function') {
-          // reaplica consentimento ao recarregar a página
-          window.enableAnalyticsAndAds();
+    function isCmpActive() {
+      // Funding Choices injeta um iframe "googlefcPresent" quando a CMP está ativa
+      try {
+        if (window.frames && window.frames['googlefcPresent']) return true;
+        if (document.querySelector('iframe[name="googlefcPresent"]')) return true;
+      } catch (_) {}
+      return false;
+    }
+
+    function init() {
+      try {
+        var banner    = document.getElementById('cookie-banner');
+        var acceptBtn = document.getElementById('cr-accept');
+        var declineBtn= document.getElementById('cr-decline');
+        var saved     = localStorage.getItem(KEY);
+        var cmpAtiva  = isCmpActive();
+
+        // Se a CMP do Google estiver ativa, não mostramos o banner custom (ela cuida da UE/UK/CH)
+        if (cmpAtiva) {
+          if (banner) banner.remove();
+          return;
         }
-        return;
-      }
-      if (saved === 'denied') {
-        banner.remove(); // mantém tudo negado (default no <head>)
-        return;
-      }
 
-      // Sem escolha: mostra banner
-      banner.hidden = false;
-
-      acceptBtn.addEventListener('click', function () {
-        localStorage.setItem(KEY, 'granted');
-        if (typeof window.enableAnalyticsAndAds === 'function') {
-          window.enableAnalyticsAndAds();
+        // Fora da UE (sem CMP): respeita escolhas salvas localmente
+        if (saved === 'granted') {
+          if (banner) banner.remove();
+          // Ativa GA4/Ads somente quando NÃO há CMP
+          if (typeof window.enableAnalyticsAndAds === 'function') {
+            window.enableAnalyticsAndAds();
+          }
+          return;
         }
-        banner.remove();
-      });
+        if (saved === 'denied') {
+          if (banner) banner.remove(); // mantém default "denied" do Consent Mode no <head>
+          return;
+        }
 
-      declineBtn.addEventListener('click', function () {
-        localStorage.setItem(KEY, 'denied');
-        // Mantém consent 'denied' (já configurado no <head>)
-        banner.remove();
-      });
-    } catch (e) {
-      // Em caso de bloqueio a storage, pelo menos não quebra a página
-      var b = document.getElementById('cookie-banner');
-      if (b) b.hidden = false;
+        // Sem escolha e sem CMP: mostra o banner
+        banner.hidden = false;
+
+        acceptBtn.addEventListener('click', function () {
+          localStorage.setItem(KEY, 'granted');
+          if (typeof window.enableAnalyticsAndAds === 'function') {
+            window.enableAnalyticsAndAds();
+          }
+          banner.remove();
+        });
+
+        declineBtn.addEventListener('click', function () {
+          localStorage.setItem(KEY, 'denied');
+          banner.remove();
+        });
+      } catch (e) {
+        // Em caso de bloqueio à storage, pelo menos garante que o banner apareça
+        var b = document.getElementById('cookie-banner');
+        if (b && !isCmpActive()) b.hidden = false;
+      }
+    }
+
+    // Funding Choices pode criar o iframe um pouco depois do DOM carregar.
+    // Pequeno atraso garante detecção consistente da CMP:
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function(){ setTimeout(init, 50); });
+    } else {
+      setTimeout(init, 50);
     }
   })();
 </script>

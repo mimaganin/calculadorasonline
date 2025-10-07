@@ -47,7 +47,7 @@ const {
   <!-- Google tag (GA4) + Consent Mode (default: denied) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-E1TZBLE3G1"></script>
   <script is:inline>
-    // Consent Mode v2: tudo negado até o usuário aceitar no CookieConsent
+    // Consent Mode v2: tudo negado até a CMP/botão aceitar
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
 
@@ -59,9 +59,10 @@ const {
     });
 
     gtag('js', new Date());
-    gtag('config', 'G-E1TZBLE3G1');
+    // Dica: anonimização de IP ajuda GDPR
+    gtag('config', 'G-E1TZBLE3G1', { 'anonymize_ip': true });
 
-    // Chamado pelo CookieConsent quando o usuário aceita
+    // Fallback para regiões fora da UE (se você usar seu CookieConsent custom)
     window.enableAnalyticsAndAds = function () {
       gtag('consent', 'update', {
         'ad_storage': 'granted',
@@ -70,6 +71,27 @@ const {
         'analytics_storage': 'granted'
       });
     };
+  </script>
+
+  <!-- Google CMP (Funding Choices) - mostra a mensagem no EEE/UK/CH -->
+  <script async src="https://fundingchoicesmessages.google.com/i/pub-0421373105939215?ers=1"></script>
+  <script is:inline>
+    (function() {
+      // Sinaliza ao Google que a CMP está presente
+      function signalGooglefcPresent() {
+        if (!window.frames['googlefcPresent']) {
+          if (document.body) {
+            const iframe = document.createElement('iframe');
+            iframe.style.cssText = 'width:0;height:0;border:0;display:none';
+            iframe.name = 'googlefcPresent';
+            document.body.appendChild(iframe);
+          } else {
+            setTimeout(signalGooglefcPresent, 0);
+          }
+        }
+      }
+      signalGooglefcPresent();
+    })();
   </script>
 
   <!-- Google AdSense -->
