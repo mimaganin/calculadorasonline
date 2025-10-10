@@ -1,9 +1,9 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
-import Ad from '../../components/AdSlot.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
   { question: 'Como calcular X% de Y?', answer: 'Multiplique Y por X e divida por 100. Ex.: 15% de 200 = (15 × 200) ÷ 100 = 30.' },
@@ -16,6 +16,7 @@ const faqs = [
 ---
 
 <Base title="Calculadora de Porcentagem" description="Quanto é X% de Y e outras variações.">
+  <Breadcrumbs />
   <h1 class="text-2xl font-semibold mb-4">Calcular porcentagem</h1>
 
   <form id="form-porcentagem" class="form-wrap grid gap-3">
@@ -68,4 +69,5 @@ const faqs = [
   <Faq faqs={faqs} />
 
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

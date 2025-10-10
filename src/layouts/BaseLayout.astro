@@ -129,12 +129,11 @@ const {
             <span class="font-bold text-lg">Conta Rápida</span>
           </a>
 
-          <!-- MENUS DESKTOP: rolagem horizontal -->
+          <!-- MENUS DESKTOP: apenas links principais -->
           <div class="hidden md:block overflow-x-auto no-scrollbar">
             <nav class="flex items-center gap-3 text-sm whitespace-nowrap">
-              {CALCS.map(i => (
-                <a class="hover:underline" href={i.href}>{i.title}</a>
-              ))}
+              <a class="hover:underline" href="/">Início</a>
+              <a class="hover:underline" href="/calculadoras/">Todas as calculadoras</a>
             </nav>
           </div>
 
@@ -146,10 +145,11 @@ const {
           </button>
         </div>
 
-        <!-- Mobile nav (lista completa) -->
+        <!-- Mobile nav: apenas links principais -->
         <div id="mnav" class="md:hidden hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-          <div class="container grid grid-cols-2 gap-2 py-3 text-sm">
-            {CALCS.map(i => (<a href={i.href}>{i.title}</a>))}
+          <div class="container grid grid-cols-1 gap-2 py-3 text-sm">
+            <a href="/">Início</a>
+            <a href="/calculadoras/">Todas as calculadoras</a>
           </div>
         </div>
       </header>
@@ -161,7 +161,7 @@ const {
         </article>
 
         <!-- Sidebar: todas as calculadoras + anúncio -->
-        <aside class="space-y-4 min-w-0">
+        <aside class="hidden md:block space-y-4 min-w-0">
           <section class="card min-w-0">
             <h3 class="font-semibold mb-2">Todas as calculadoras</h3>
             <ul class="grid grid-cols-1 gap-1 text-sm max-h-80 overflow-auto no-scrollbar pr-1">
@@ -181,7 +181,7 @@ const {
       </main>
 
       <footer class="mt-2 pb-10 text-center text-sm opacity-70">
-        <p>© {new Date().getFullYear()} Calculadoras Rápidas · <a href="/sobre/">Sobre</a> · <a href="/politica-privacidade/">Privacidade</a></p>
+        <p>© {new Date().getFullYear()} Conta Rápida - Calculadoras Online Rápidas · <a href="/sobre/">Sobre</a> · <a href="/politica-privacidade/">Privacidade</a></p>
       </footer>
     </div>
 

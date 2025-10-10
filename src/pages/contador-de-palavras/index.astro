@@ -3,6 +3,7 @@ import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
   { question: 'Como o contador funciona?', answer: 'Contamos palavras por grupos de caracteres não-brancos e caracteres por comprimento do texto. É tudo local no seu navegador.' },
@@ -65,4 +66,5 @@ const faqs = [
   <Faq faqs={faqs} />
 
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

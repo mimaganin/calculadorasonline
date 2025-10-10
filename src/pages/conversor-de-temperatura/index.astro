@@ -3,6 +3,7 @@ import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
   { question: 'Quais escalas são suportadas?', answer: 'Celsius, Fahrenheit e Kelvin.' },
@@ -104,4 +105,5 @@ const faqs = [
   <Faq faqs={faqs} />
 
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

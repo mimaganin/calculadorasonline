@@ -1,0 +1,83 @@
+---
+import { CALCS } from '../data/calculators.js';
+
+/**
+ * Uso:
+ *   <Breadcrumbs />  -> auto a partir de Astro.url.pathname
+ *   <Breadcrumbs items={[...]} /> -> manual (opcional, sobrepõe o auto)
+ *
+ * Regras:
+ * - Sempre começa com Início (/)
+ * - Se a página for uma calculadora conhecida em CALCS (href === pathname):
+ *     adiciona "Todas" (/calculadoras/) + {title da calculadora, pathname}
+ * - Se for /calculadoras/:
+ *     mostra Início > Todas as calculadoras
+ * - Para outras rotas, gera nome pela slug (fallback)
+ */
+
+const { items = null } = Astro.props;
+const pathname = Astro.url.pathname;
+
+// helper: capitaliza slug "regra-de-tres" -> "Regra De Tres"
+function titleFromSlug(slug = '') {
+  return slug
+    .split('-')
+    .filter(Boolean)
+    .map(s => s.charAt(0).toUpperCase() + s.slice(1))
+    .join(' ');
+}
+
+// tenta achar calculadora por href === pathname
+const calc = CALCS.find(c => c.href === pathname);
+
+// constrói automaticamente se items não for passado
+let auto = [
+  { name: 'Início', url: '/' }
+];
+
+if (pathname === '/calculadoras/') {
+  auto.push({ name: 'Todas as calculadoras', url: '/calculadoras/' });
+} else if (calc) {
+  auto.push({ name: 'Todas', url: '/calculadoras/' });
+  auto.push({ name: calc.title || titleFromSlug(pathname.replaceAll('/', '')), url: pathname });
+} else if (pathname !== '/') {
+  // fallback genérico para outras páginas (ex.: /sobre/, /politica-privacidade/)
+  const seg = pathname.replace(/^\/|\/$/g, ''); // remove leading/trailing slash
+  const name = seg ? titleFromSlug(seg) : '';
+  if (name) auto.push({ name, url: pathname });
+}
+
+// decide a fonte final
+const trail = items && Array.isArray(items) && items.length ? items : auto;
+
+// se só tiver "Início", não renderiza nada
+const shouldRender = trail.length > 1;
+
+// JSON-LD para breadcrumbs
+const ld = shouldRender ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": trail.map((it, idx) => ({
+    "@type": "ListItem",
+    "position": idx + 1,
+    "name": it.name,
+    "item": `https://conta-rapida.com${it.url}`
+  }))
+} : null;
+---
+
+{shouldRender && (
+  <>
+    <nav aria-label="Breadcrumb" class="text-sm opacity-80 mb-2">
+      <ol class="flex gap-1 flex-wrap">
+        {trail.map((it, idx) => (
+          <li>
+            <a href={it.url} class="hover:underline">{it.name}</a>
+            {idx < trail.length - 1 && <span>&nbsp;/&nbsp;</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+    {ld && <script type="application/ld+json" is:inline>{JSON.stringify(ld)}</script>}
+  </>
+)}

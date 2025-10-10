@@ -3,6 +3,7 @@ import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
   { question: 'Qual é a fórmula do IMC?', answer: 'IMC = peso (kg) ÷ [altura (m)]². Ex.: 70 ÷ 1,75² = 22,9.' },
@@ -15,6 +16,8 @@ const faqs = [
 ---
 
 <Base title="Calculadora de IMC" description="Calcule seu Índice de Massa Corporal rapidamente.">
+
+  <Breadcrumbs />
 
   <h1 class="text-2xl font-semibold mb-4">Calculadora de IMC</h1>
 
@@ -81,4 +84,5 @@ const faqs = [
   <Faq faqs={faqs} />
 
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

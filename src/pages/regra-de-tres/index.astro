@@ -3,6 +3,7 @@ import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
   { question: 'Qual a fórmula da regra de três?', answer: 'Se A está para B assim como C está para D, então D = (B × C) ÷ A.' },
@@ -102,4 +103,5 @@ const faqs = [
   <Faq faqs={faqs} />
 
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>
