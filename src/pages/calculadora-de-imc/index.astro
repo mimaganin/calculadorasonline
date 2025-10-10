@@ -1,8 +1,17 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
-import Ad from '../../components/AdSlot.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+
+const faqs = [
+  { question: 'Qual é a fórmula do IMC?', answer: 'IMC = peso (kg) ÷ [altura (m)]². Ex.: 70 ÷ 1,75² = 22,9.' },
+  { question: 'IMC serve para qualquer pessoa?', answer: 'É um indicador populacional. Não considera composição corporal, gestantes, idosos, atletas e condições específicas. Use como referência, não diagnóstico.' },
+  { question: 'Qual a classificação do resultado?', answer: 'Abaixo de 18,5: baixo peso; 18,5–24,9: normal; 25–29,9: sobrepeso; 30+: obesidade. Consulte seu médico para interpretação individual.' },
+  { question: 'Posso usar altura em cm?', answer: 'Não diretamente. Informe em metros com ponto decimal (ex.: 170 cm = 1.70).' },
+  { question: 'O IMC muda com a idade?', answer: 'A fórmula é a mesma, mas a interpretação pode variar com idade e contexto clínico. Procure um profissional de saúde para avaliação completa.' },
+];
+
 ---
 
 <Base title="Calculadora de IMC" description="Calcule seu Índice de Massa Corporal rapidamente.">
@@ -56,5 +65,20 @@ import AdSlot from '../../components/AdSlot.astro';
       document.getElementById('saida').textContent = `IMC: ${imc.toFixed(1)} — ${categoria(imc)}`;
     });
   </script>
+  
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Como funciona o cálculo do IMC</h2>
+    <p>O Índice de Massa Corporal (IMC) é um indicador simples que relaciona peso e altura para estimar a faixa de peso em adultos. Ele é útil para triagem e acompanhamento geral, mas não substitui avaliação clínica.</p>
+    <p>Para calcular: divida o peso em quilogramas pela altura em metros elevada ao quadrado. Nossa calculadora faz essa conta e já mostra a categoria correspondente.</p>
+
+    <h3>Exemplo</h3>
+    <p>Uma pessoa com 70 kg e 1,75 m: IMC = 70 ÷ (1,75 × 1,75) = 22,9 (faixa “normal”).</p>
+
+    <h3>Limitações</h3>
+    <p>O IMC não distingue massa muscular de gordura corporal. Atletas, gestantes, idosos e pessoas com condições específicas podem precisar de outras medidas (ex.: circunferência abdominal, composição corporal).</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
 </Base>

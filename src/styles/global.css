@@ -6,6 +6,44 @@
   color-scheme: light dark;
 }
 
+/* Box sizing consistente */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Nunca permitir scroll horizontal da página */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Qualquer contêiner principal não pode vazar */
+.container, main, header, footer, nav, article, aside, .card {
+  min-width: 0;
+  overflow-x: clip; /* ou hidden, se preferir */
+}
+
+/* Anúncios e iframes nunca passam da tela */
+ins.adsbygoogle,
+ins.adsbygoogle iframe,
+iframe {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Quebra links/textos muito longos */
+a, p, li, h1, h2, h3 {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Prose segura para códigos/tabelas */
+.prose pre, .prose code, .prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+
 body {
   @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
   font-feature-settings: 'liga' 1, 'calt' 1;

@@ -2,6 +2,16 @@
 import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+
+const faqs = [
+  { question: 'Como o contador funciona?', answer: 'Contamos palavras por grupos de caracteres não-brancos e caracteres por comprimento do texto. É tudo local no seu navegador.' },
+  { question: 'O contador inclui espaços?', answer: 'A contagem de caracteres inclui espaços; a de palavras ignora múltiplos espaços e quebras de linha.' },
+  { question: 'Há limite de tamanho?', answer: 'Funciona bem para textos longos. Navegadores modernos suportam colagem de milhares de caracteres.' },
+  { question: 'Meus dados são enviados ao servidor?', answer: 'Não. O cálculo roda 100% no seu navegador, sem envio de dados.' },
+  { question: 'Posso usar para redes sociais?', answer: 'Sim. É útil para limites de bio, legendas e metadescrições.' },
+];
+
 ---
 
 <Base title="Contador de palavras e caracteres" description="Conte palavras e caracteres do seu texto online.">
@@ -40,5 +50,19 @@ import AdSlot from '../../components/AdSlot.astro';
 
     txtEl.addEventListener('input', (e) => count(e.target.value));
   </script>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Conte palavras e caracteres com precisão</h2>
+    <p>Este contador ajuda a ajustar textos a requisitos de tamanho, como redações, legendas e metadescrições. O cálculo é instantâneo e feito no seu navegador.</p>
+
+    <h3>Exemplo prático</h3>
+    <p>Cole um parágrafo qualquer e veja as contagens mudarem em tempo real à medida que edita.</p>
+
+    <h3>Privacidade</h3>
+    <p>Não armazenamos o conteúdo digitado. Tudo acontece localmente, sem envio para servidores.</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
 </Base>
