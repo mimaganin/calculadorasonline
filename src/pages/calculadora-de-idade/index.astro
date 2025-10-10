@@ -1,9 +1,9 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
-import Ad from '../../components/AdSlot.astro';
 import Faq from '../../components/FaqSchema.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
   { question:'Como calcular idade em meses?', answer:'Use a diferença entre datas; nossa ferramenta mostra anos, meses e dias automaticamente.' },
@@ -12,7 +12,8 @@ const faqs = [
 ---
 
 <Base title="Calculadora de Idade" description="Descubra quantos anos, meses e dias você tem hoje.">
- 
+  <Breadcrumbs />
+
   <h1 class="text-2xl font-semibold mb-4">Calcular idade</h1>
 
   <form id="form-idade" class="form-wrap grid gap-3">
@@ -62,4 +63,5 @@ const faqs = [
     });
   </script>
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

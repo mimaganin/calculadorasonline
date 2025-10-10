@@ -1,8 +1,18 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
-import Ad from '../../components/AdSlot.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const faqs = [
+  { question: 'Quais escalas são suportadas?', answer: 'Celsius, Fahrenheit e Kelvin.' },
+  { question: 'Como converter Fahrenheit para Celsius?', answer: 'C = (F − 32) × 5/9.' },
+  { question: 'E Celsius para Fahrenheit?', answer: 'F = (C × 9/5) + 32.' },
+  { question: 'Como converter Celsius para Kelvin?', answer: 'K = C + 273,15.' },
+  { question: 'Posso usar vírgula?', answer: 'Use ponto como separador decimal, por compatibilidade do navegador.' },
+];
+
 ---
 
 <Base title="Conversor de Temperatura" description="Converta entre Celsius, Fahrenheit e Kelvin.">
@@ -79,5 +89,21 @@ import AdSlot from '../../components/AdSlot.astro';
       document.getElementById('saida').textContent = `${res.toFixed(2)} ${t}`;
     });
   </script>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Converta entre Celsius, Fahrenheit e Kelvin</h2>
+    <p>Escolha a escala de origem, informe o valor e selecione a escala de destino. A nossa ferramenta aplica as fórmulas padrão com precisão.</p>
+
+    <h3>Exemplos</h3>
+    <ul>
+      <li>30 °C → 86 °F</li>
+      <li>0 °C → 273,15 K</li>
+      <li>68 °F → 20 °C</li>
+    </ul>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

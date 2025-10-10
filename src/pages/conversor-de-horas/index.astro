@@ -2,6 +2,16 @@
 import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const faqs = [
+  { question: 'Como converter horas em minutos e segundos?', answer: '1 hora = 60 minutos; 1 minuto = 60 segundos. Informe o valor em horas (ex.: 1.5) e veja as equivalências.' },
+  { question: 'Posso informar minutos ou segundos diretamente?', answer: 'Este conversor parte de horas. Para minutos → horas, divida por 60; para segundos → horas, divida por 3600.' },
+  { question: 'Como representar 1h30?', answer: 'Use decimal: 1.5 horas. A calculadora converte para 90 minutos e 5400 segundos.' },
+  { question: 'Aceita vírgula?', answer: 'Use ponto como separador decimal (ex.: 1,75 → 1.75) para compatibilidade.' },
+];
+
 ---
 
 <Base title="Conversor de horas" description="Converta horas em minutos e segundos facilmente.">
@@ -44,5 +54,17 @@ import AdSlot from '../../components/AdSlot.astro';
       document.getElementById('saida').textContent = `${min.toFixed(2)} minutos — ${sec.toFixed(0)} segundos`;
     });
   </script>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Converta horas em minutos e segundos</h2>
+    <p>Insira um valor em horas e obtenha a equivalência exata em minutos e segundos. É útil para estudos, esportes, relatórios de tempo e produtividade.</p>
+
+    <h3>Exemplo</h3>
+    <p>1,25 hora (1.25) = 75 minutos = 4.500 segundos.</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

@@ -1,8 +1,17 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
-import Ad from '../../components/AdSlot.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const faqs = [
+  { question: 'A contagem inclui a data inicial?', answer: 'Calculamos a diferença absoluta entre as datas. Se precisar incluir a data inicial, some 1 ao resultado em dias.' },
+  { question: 'Considera anos bissextos?', answer: 'Sim. As datas são tratadas nativamente pelo navegador, incluindo bissextos e meses com durações distintas.' },
+  { question: 'Posso calcular em semanas?', answer: 'Mostramos dias e uma aproximação em semanas (dias ÷ 7). Para meses exatos, prefira comparar datas do mesmo dia.' },
+  { question: 'Fusos horários afetam o resultado?', answer: 'Usamos meia-noite local (T00:00:00) para minimizar diferenças de fuso ao criar os objetos de data.' },
+];
+
 ---
 
 <Base title="Dias entre datas" description="Calcule a diferença de dias, semanas e meses entre duas datas.">
@@ -55,5 +64,20 @@ import AdSlot from '../../components/AdSlot.astro';
         `${days} dias (~${weeks} semanas ou ${months} meses)`;
     });
   </script>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Calcule a diferença entre duas datas</h2>
+    <p>Informe a data inicial e final para ver o total de dias entre elas. Também exibimos uma aproximação em semanas para referência rápida.</p>
+
+    <h3>Exemplo</h3>
+    <p>De 01/01/2025 a 31/12/2025: 364 dias (~52,00 semanas).</p>
+
+    <h3>Dica</h3>
+    <p>Para prazos que começam hoje, selecione a data atual como início. Para incluir a data inicial no total, some 1 dia ao resultado.</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

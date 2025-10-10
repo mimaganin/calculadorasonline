@@ -2,9 +2,22 @@
 import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const faqs = [
+  { question: 'Qual a diferença entre juros simples e compostos?', answer: 'Nos simples, os juros incidem apenas sobre o capital inicial. Nos compostos, cada período soma juros ao principal, e os juros seguintes incidem sobre esse montante.' },
+  { question: 'Como converter taxa mensal para anual?', answer: 'Simples: i_anual ≈ i_mensal × 12. Composta: (1 + i_mensal)^12 − 1.' },
+  { question: 'O que é montante?', answer: 'É o total ao final do período: capital + juros.' },
+  { question: 'Posso usar taxa com vírgula?', answer: 'Use ponto para decimais (ex.: 2,5% → 2.5), e informe a taxa no mesmo período do tempo t.' },
+  { question: 'O resultado considera impostos/tarifas?', answer: 'Não. O cálculo é matemático. Para custos efetivos, inclua encargos do contrato.' },
+];
+
 ---
 
 <Base title="Calculadora de juros" description="Juros simples e compostos.">
+  <Breadcrumbs />
+
   <h1 class="text-2xl font-semibold mb-4">Calculadora de juros</h1>
 
   <form id="form-juros" class="form-wrap grid gap-3">
@@ -81,5 +94,23 @@ import AdSlot from '../../components/AdSlot.astro';
       document.getElementById('saida').textContent = result;
     });
   </script>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Como calcular juros</h2>
+    <p>Em <strong>juros simples</strong>, os juros aumentam linearmente: J = C × i × t, com montante M = C + J. Em <strong>juros compostos</strong>, cada período aplica a taxa sobre o montante acumulado: M = C × (1 + i)^t.</p>
+
+    <h3>Exemplos</h3>
+    <ul>
+      <li><strong>Simples:</strong> C=1.000, i=2% ao mês, t=6 → J=120, M=1.120.</li>
+      <li><strong>Compostos:</strong> C=1.000, i=2% ao mês, t=6 → M≈1.126,16; J≈126,16.</li>
+    </ul>
+
+    <h3>Dicas</h3>
+    <p>Padronize o período (taxa e tempo em “mês” ou “ano”). Para comparar propostas, leve em conta CET, tarifas e impostos, além da taxa nominal.</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

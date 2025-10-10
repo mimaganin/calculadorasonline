@@ -2,6 +2,16 @@
 import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const faqs = [
+  { question: 'Quais unidades estão disponíveis?', answer: 'Quilômetro (km), metro (m), centímetro (cm) e milímetro (mm).' },
+  { question: 'Como funciona a conversão?', answer: 'Convertendo primeiro para metros (unidade base) e depois para a unidade desejada.' },
+  { question: 'Posso usar vírgula?', answer: 'Use ponto para decimais (ex.: 1,5 → 1.5).' },
+  { question: 'Haverá mais unidades?', answer: 'Sim, planejamos adicionar milhas, jardas e pés em breve.' },
+];
+
 ---
 
 <Base title="Conversor de Unidades" description="Converta entre km, m, cm e mm.">
@@ -74,5 +84,17 @@ import AdSlot from '../../components/AdSlot.astro';
       document.getElementById('saida').textContent = `${res.toFixed(4)} ${t}`;
     });
   </script>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Converta valores de comprimento</h2>
+    <p>Escolha as unidades de origem e destino e informe o valor. A calculadora converte primeiro para metros e em seguida para a unidade escolhida, garantindo consistência.</p>
+
+    <h3>Exemplo</h3>
+    <p>1,5 km (1.5) = 1.500 m; 250 cm = 2,5 m.</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

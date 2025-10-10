@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { CALCS } from '../../data/calculators.js';
+---
+
+<Base title="Todas as calculadoras" description="Lista completa de calculadoras do site.">
+  <h1 class="text-2xl font-semibold mb-4">Todas as calculadoras</h1>
+
+  <section class="prose dark:prose-invert mb-4">
+    <p>Encontre aqui todas as ferramentas do Conta Rápida. Selecione uma categoria e acesse a calculadora desejada.</p>
+  </section>
+
+  <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {CALCS.map(i => (
+      <li class="group p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:shadow-sm transition">
+        <a href={i.href} class="no-underline block">
+          <div class="flex items-start gap-3">
+            <div class="text-2xl">{i.icon}</div>
+            <div>
+              <h3 class="font-semibold group-hover:underline">{i.title}</h3>
+              {i.desc && <p class="text-sm opacity-70">{i.desc}</p>}
+            </div>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <AdSlot slotId="6940589775" />
+</Base>

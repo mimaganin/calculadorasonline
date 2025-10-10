@@ -2,6 +2,16 @@
 import Base from '../../layouts/BaseLayout.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const faqs = [
+  { question: 'Qual a fórmula da regra de três?', answer: 'Se A está para B assim como C está para D, então D = (B × C) ÷ A.' },
+  { question: 'Quando usar?', answer: 'Quando há proporcionalidade direta entre grandezas. Se for inversa, ajuste a relação (A/B = D/C).' },
+  { question: 'Como identificar proporcionalidade inversa?', answer: 'Se uma grandeza aumenta enquanto a outra diminui para manter o produto constante (ex.: velocidade × tempo), é inversa.' },
+  { question: 'Posso usar decimais?', answer: 'Sim. Use ponto como separador decimal para melhor compatibilidade.' },
+];
+
 ---
 
 <Base title="Regra de três" description="Proporções simples: encontre o valor desconhecido.">
@@ -78,5 +88,20 @@ import AdSlot from '../../components/AdSlot.astro';
       document.getElementById('saida').textContent = d.toFixed(2);
     });
   </script>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Resolva proporções com regra de três</h2>
+    <p>Informe três valores para calcular o quarto termo em relações proporcionais. Use quando as grandezas variam na mesma razão (proporcionalidade direta).</p>
+
+    <h3>Exemplo</h3>
+    <p>Se 5 unidades custam 10 €, quanto custam 8? D = (10 × 8) ÷ 5 = 16 €.</p>
+
+    <h3>Dica</h3>
+    <p>Para situações de proporcionalidade inversa (ex.: velocidade e tempo fixo), inverta uma das razões antes de aplicar a fórmula.</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>

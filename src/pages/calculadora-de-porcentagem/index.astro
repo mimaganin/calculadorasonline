@@ -1,11 +1,22 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
-import Ad from '../../components/AdSlot.astro';
 import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const faqs = [
+  { question: 'Como calcular X% de Y?', answer: 'Multiplique Y por X e divida por 100. Ex.: 15% de 200 = (15 × 200) ÷ 100 = 30.' },
+  { question: 'Como calcular desconto em porcentagem?', answer: 'Valor final = preço × (1 − desconto/100). Ex.: 200 com 15% off → 200 × 0,85 = 170.' },
+  { question: 'E se for aumento?', answer: 'Preço ajustado = preço × (1 + aumento/100). Ex.: 100 com +8% → 108.' },
+  { question: 'Como descobrir a porcentagem de diferença entre dois valores?', answer: 'Diferença% = (|novo − antigo| ÷ antigo) × 100.' },
+  { question: 'Posso usar vírgula?', answer: 'Use ponto para decimais (ex.: 12,5% → 12.5), por compatibilidade do navegador.' },
+];
+
 ---
 
 <Base title="Calculadora de Porcentagem" description="Quanto é X% de Y e outras variações.">
+  <Breadcrumbs />
   <h1 class="text-2xl font-semibold mb-4">Calcular porcentagem</h1>
 
   <form id="form-porcentagem" class="form-wrap grid gap-3">
@@ -26,12 +37,6 @@ import AdSlot from '../../components/AdSlot.astro';
 
   <AdSlot slotId="6940589775" />
 
-  <section class="prose dark:prose-invert mt-6">
-    <h2>Como funciona</h2>
-    <p>X% de Y = (X ÷ 100) × Y.</p>
-    <p>Exemplo: 15% de 200 = 30.</p>
-  </section>
-
   <script is:inline>
     document.getElementById('form-porcentagem').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -45,5 +50,24 @@ import AdSlot from '../../components/AdSlot.astro';
       document.getElementById('saida').textContent = `${p}% de ${v} = ${resultado.toFixed(2)}`;
     });
   </script>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Como funciona o cálculo de porcentagem</h2>
+    <p>Porcentagem representa uma proporção de 100. Nossa calculadora resolve os casos mais comuns: “X% de Y”, descontos e aumentos, e permite testes rápidos para compras e comparações.</p>
+
+    <h3>Exemplos úteis</h3>
+    <ul>
+      <li><strong>Desconto:</strong> 15% de 200 = 30 → preço final = 170.</li>
+      <li><strong>Aumento:</strong> 8% sobre 100 = 8 → preço final = 108.</li>
+      <li><strong>Participação:</strong> 25% de 320 = 80.</li>
+    </ul>
+
+    <h3>Dica</h3>
+    <p>Para composições sucessivas (ex.: −10% e depois +10%), calcule passo a passo, porque a base muda após cada aplicação.</p>
+  </section>
+
+  <Faq faqs={faqs} />
+
   <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
 </Base>
