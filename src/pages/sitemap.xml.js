@@ -1,5 +1,7 @@
 import { CALCS } from '../data/calculators.js';
 
+export const prerender = true;
+
 export async function get({ site }) {
   const base = site || 'https://www.conta-rapida.com';
   const now = new Date().toISOString();
