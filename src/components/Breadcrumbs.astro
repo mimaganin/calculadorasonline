@@ -78,6 +78,11 @@ const ld = shouldRender ? {
         ))}
       </ol>
     </nav>
-    {ld && <script type="application/ld+json" is:inline>{JSON.stringify(ld)}</script>}
+    {ld && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(ld)}
+      ></script>
+    )}
   </>
 )}
