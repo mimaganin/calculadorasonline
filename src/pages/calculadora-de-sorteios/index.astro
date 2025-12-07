@@ -1,0 +1,392 @@
+---
+import Base from '../../layouts/BaseLayout.astro';
+import CalculatorsGrid from '../../components/CalculatorsGrid.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/FaqSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const faqs = [
+  {
+    question: 'Posso sortear itens repetidos?',
+    answer:
+      'Sim. Basta ativar a opção "Permitir repetir vencedor". Quando ela está desligada, o app remove o item sorteado da lista antes da próxima rodada.',
+  },
+  {
+    question: 'Quantos itens posso incluir?',
+    answer:
+      'Aceitamos até 1.000 nomes (digitando um por linha) ou 5.000 números sequenciais. Esses limites evitam travamentos no navegador.',
+  },
+  {
+    question: 'A ordem importa?',
+    answer:
+      'Não. Em cada sorteio embaralhamos a lista novamente usando Math.random(). Se quiser registrar uma ordem oficial, use o bloco de histórico ou copie o resultado para outro documento.',
+  },
+];
+---
+
+<Base title="Gerador de Sorteios" description="Sorteie nomes, itens personalizados ou intervalos numéricos com quantos vencedores quiser.">
+  <Breadcrumbs />
+  <h1 class="text-2xl font-semibold mb-4">Gerador de sorteios</h1>
+
+  <form id="form-sorteio" class="form-wrap grid gap-3">
+    <label class="grid gap-1">
+      <span>Modo do sorteio</span>
+      <select id="tipo" class="input border rounded p-2">
+        <option value="nomes">Nomes / itens personalizados</option>
+        <option value="numeros">Números sequenciais</option>
+      </select>
+    </label>
+
+    <label class="grid gap-1">
+      <span id="lista-label">Lista de participantes (um por linha ou separados por vírgula)</span>
+      <textarea
+        id="entrada"
+        rows="5"
+        class="input border rounded p-2"
+        data-placeholder-nomes="Ana&#10;Bruno&#10;Carlos"
+        data-placeholder-numeros="10&#10;25&#10;50"
+        placeholder="Ana
+Bruno
+Carlos"></textarea>
+    </label>
+
+    <div class="grid gap-1">
+      <span class="text-sm font-medium">Ou importe um CSV</span>
+      <input
+        id="arquivo"
+        type="file"
+        accept=".csv,text/csv"
+        class="input border rounded p-2 file:mr-3 file:py-1 file:px-3 file:border-0 file:bg-gray-100 dark:file:bg-gray-800/50" />
+      <p id="arquivo-feedback" class="text-xs opacity-70">Apenas a primeira coluna será considerada. Até 5.000 linhas são aceitas.</p>
+    </div>
+
+    <div class="grid gap-3 sm:grid-cols-2 hidden" data-field="numeros">
+      <label class="grid gap-1">
+        <span>Número inicial</span>
+        <input id="inicio" type="number" class="input border rounded p-2" placeholder="Ex.: 1">
+      </label>
+      <label class="grid gap-1">
+        <span>Número final</span>
+        <input id="fim" type="number" class="input border rounded p-2" placeholder="Ex.: 100">
+      </label>
+    </div>
+
+    <label class="grid gap-1">
+      <span>Quantidade de vencedores</span>
+      <input id="quantidade" type="number" min="1" value="1" class="input border rounded p-2">
+    </label>
+
+    <label class="inline-flex items-center gap-2 text-sm">
+      <input id="repetir" type="checkbox" class="accent-blue-600">
+      <span>Permitir repetir vencedor</span>
+    </label>
+
+    <button class="btn">Sortear</button>
+  </form>
+
+  <div id="saida" class="result"></div>
+
+  <section class="mt-6">
+    <h2 class="text-xl font-semibold mb-3">Histórico recente</h2>
+    <p class="text-sm opacity-75 mb-3">Cada rodada fica registrada abaixo para você copiar ou conferir depois.</p>
+    <ul id="historico" class="grid gap-3"></ul>
+  </section>
+
+  <AdSlot slotId="6940589775" />
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Como personalizar seu sorteio</h2>
+    <p>O gerador permite montar listas livres (nomes, prêmios, tarefas) ou intervalos numéricos. Basta escolher o modo desejado no topo do formulário.</p>
+
+    <h3>Passo a passo</h3>
+    <ol>
+      <li>Escreva todos os participantes (um por linha) <strong>ou</strong> informe o intervalo numérico que deseja sortear.</li>
+      <li>Defina quantos vencedores serão escolhidos na rodada.</li>
+      <li>Decida se um mesmo item poderá ser sorteado mais de uma vez.</li>
+      <li>Clique em "Sortear" e acompanhe o resultado e o histórico.</li>
+    </ol>
+
+    <h3>Dicas rápidas</h3>
+    <ul>
+      <li>Use nomes curtos, como apelidos ou números de inscrição, para facilitar a conferência.</li>
+      <li>Para grandes eventos, execute várias rodadas e faça download dos resultados periodicamente.</li>
+      <li>Se precisar repetir rapidamente o mesmo sorteio, deixe a lista salva em um bloco de notas e cole novamente.</li>
+    </ul>
+  </section>
+
+  <Faq faqs={faqs} />
+
+  <CalculatorsGrid current={Astro.url.pathname} />
+  <AdSlot slotId="6940589775" />
+
+  <script is:inline>
+    const form = document.getElementById('form-sorteio');
+    const tipoInput = document.getElementById('tipo');
+    const numerosField = document.querySelector('[data-field="numeros"]');
+    const resultEl = document.getElementById('saida');
+    const historicoEl = document.getElementById('historico');
+    const listaLabel = document.getElementById('lista-label');
+    const listaInput = document.getElementById('entrada');
+    const inicioInput = document.getElementById('inicio');
+    const fimInput = document.getElementById('fim');
+    const arquivoInput = document.getElementById('arquivo');
+    const arquivoFeedback = document.getElementById('arquivo-feedback');
+    const MAX_NOMES = 1000;
+    const MAX_NUMEROS = 5000;
+    let historico = [];
+
+    function toggleFields() {
+      const modo = tipoInput.value;
+      const isNomes = modo === 'nomes';
+      numerosField.classList.toggle('hidden', isNomes);
+
+      if (isNomes) {
+        listaLabel.textContent = 'Lista de participantes (um por linha ou separados por vírgula)';
+        listaInput.placeholder = listaInput.dataset.placeholderNomes;
+        inicioInput.value = '';
+        fimInput.value = '';
+      } else {
+        listaLabel.textContent = 'Lista de números (um por linha ou separados por vírgula)';
+        listaInput.placeholder = listaInput.dataset.placeholderNumeros;
+      }
+      listaInput.value = '';
+      if (arquivoInput) {
+        arquivoInput.value = '';
+      }
+      resetUploadFeedback();
+    }
+    toggleFields();
+    tipoInput.addEventListener('change', toggleFields);
+    arquivoInput?.addEventListener('change', handleCsvUpload);
+    resetUploadFeedback();
+
+    function resetUploadFeedback() {
+      if (!arquivoFeedback) return;
+      arquivoFeedback.textContent = 'Apenas a primeira coluna será considerada. Até 5.000 linhas são aceitas.';
+      arquivoFeedback.classList.remove('text-green-600', 'text-red-500');
+      arquivoFeedback.classList.add('opacity-70');
+    }
+
+    function setUploadMessage(message, isError = false) {
+      if (!arquivoFeedback) return;
+      arquivoFeedback.textContent = message;
+      arquivoFeedback.classList.remove('opacity-70');
+      arquivoFeedback.classList.toggle('text-green-600', !isError);
+      arquivoFeedback.classList.toggle('text-red-500', isError);
+    }
+
+    function handleCsvUpload(event) {
+      const inputEl = event.target;
+      const file = inputEl.files?.[0];
+      if (!file) return;
+      const isCsv = file.type.includes('csv') || /\.csv$/i.test(file.name);
+      if (!isCsv) {
+        setUploadMessage('Não é possível ler este tipo de arquivo. Apenas arquivos CSV são suportados. Tente novamente.', true);
+        inputEl.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = reader.result?.toString() ?? '';
+        const valores = text
+          .split(/\r?\n/)
+          .flatMap((linha) => linha.split(/[,;|\t]/))
+          .map((parte) => parte.trim())
+          .filter(Boolean);
+
+        if (!valores.length) {
+          setUploadMessage('O arquivo não possui itens válidos.', true);
+          return;
+        }
+
+        const limite = MAX_NUMEROS;
+        const usados = valores.slice(0, limite);
+        listaInput.value = usados.join('\n');
+
+        if (valores.length > limite) {
+          setUploadMessage(`Importamos ${limite} itens (limite máximo).`, false);
+        } else {
+          setUploadMessage(`${valores.length} itens adicionados a partir do CSV.`, false);
+        }
+        inputEl.value = '';
+      };
+      reader.onerror = () => {
+        setUploadMessage('Não foi possível ler o arquivo. Tente novamente.', true);
+        inputEl.value = '';
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const modo = tipoInput.value;
+      const quantidade = parseInt(document.getElementById('quantidade').value, 10) || 0;
+      const repetir = document.getElementById('repetir').checked;
+      let pool = [];
+      let erro = '';
+
+      if (quantidade < 1) {
+        resultEl.textContent = 'Escolha pelo menos um vencedor.';
+        return;
+      }
+
+      const entradas = listaInput.value
+        .split(/[\n,;]/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      if (modo === 'nomes') {
+        pool = entradas;
+
+        if (pool.length < 2) {
+          erro = 'Informe pelo menos dois nomes ou itens.';
+        } else if (pool.length > MAX_NOMES) {
+          erro = `Limitamos a ${MAX_NOMES} itens por sorteio para manter tudo rápido.`;
+        }
+      } else {
+        const numerosDigitados = entradas
+          .map((item) => Number(item.replace(',', '.')))
+          .filter((num) => !Number.isNaN(num));
+
+        if (numerosDigitados.length >= 2) {
+          if (numerosDigitados.length > MAX_NUMEROS) {
+            erro = `Limitamos a ${MAX_NUMEROS} números por sorteio.`;
+          } else {
+            pool = numerosDigitados;
+          }
+        } else {
+          const inicio = parseInt(inicioInput.value, 10);
+          const fim = parseInt(fimInput.value, 10);
+
+          if (Number.isNaN(inicio) || Number.isNaN(fim)) {
+            erro = 'Informe pelo menos dois números na lista ou defina um intervalo válido.';
+          } else {
+            const menor = Math.min(inicio, fim);
+            const maior = Math.max(inicio, fim);
+            const total = maior - menor + 1;
+
+            if (total > MAX_NUMEROS) {
+              erro = `Reduza o intervalo. Aceitamos até ${MAX_NUMEROS} números em uma mesma rodada.`;
+            } else {
+              pool = Array.from({ length: total }, (_, idx) => menor + idx);
+            }
+          }
+        }
+      }
+
+      if (!erro && !repetir && pool.length < quantidade) {
+        erro = 'Não há itens suficientes para sortear sem repetição.';
+      }
+
+      if (erro) {
+        resultEl.textContent = erro;
+        return;
+      }
+
+      const vencedores = realizarSorteio(pool, quantidade, repetir);
+      renderResultado(vencedores, modo, quantidade);
+      registrarHistorico(modo === 'nomes' ? 'Nomes' : 'Números', vencedores);
+    });
+
+    function realizarSorteio(lista, quantidade, repetir) {
+      const disponiveis = lista.slice();
+      const resultados = [];
+
+      for (let i = 0; i < quantidade; i++) {
+        const indice = Math.floor(Math.random() * disponiveis.length);
+        resultados.push(disponiveis[indice]);
+        if (!repetir) {
+          disponiveis.splice(indice, 1);
+        }
+      }
+
+      return resultados;
+    }
+
+    function renderResultado(vencedores, modo, quantidade) {
+      const showLabel = quantidade > 1;
+      const labelBase = 'Vencedor';
+      const itens = vencedores
+        .map(
+          (valor, index) =>
+            `<li class="flex flex-col rounded border border-gray-200 dark:border-gray-800 px-3 py-2">
+              ${
+                showLabel
+                  ? `<span class="text-xs uppercase tracking-wide opacity-60">${labelBase} ${index + 1}</span>`
+                  : ''
+              }
+              <span class="text-2xl font-semibold">${valor}</span>
+            </li>`
+        )
+        .join('');
+      resultEl.innerHTML = `
+        <p class="font-semibold mb-2">Vencedores:</p>
+        <ul class="grid gap-2">${itens}</ul>
+        <button
+          type="button"
+          class="mt-3 inline-flex items-center gap-2 text-sm text-blue-600 hover:underline"
+          data-copy>Copiar resultado</button>
+        <p class="text-xs text-green-600 mt-1 hidden" data-copy-feedback>Resultado copiado!</p>
+      `;
+      const copyBtn = resultEl.querySelector('[data-copy]');
+      const feedbackEl = resultEl.querySelector('[data-copy-feedback]');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => handleCopy(vencedores, feedbackEl));
+      }
+    }
+
+    function handleCopy(valores, feedbackEl) {
+      const texto = valores.join(', ');
+      const showMessage = (mensagem, isError = false) => {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = mensagem;
+        feedbackEl.classList.toggle('text-green-600', !isError);
+        feedbackEl.classList.toggle('text-red-500', isError);
+        feedbackEl.classList.remove('hidden');
+        setTimeout(() => feedbackEl.classList.add('hidden'), 2000);
+      };
+
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(texto).then(
+          () => showMessage('Resultado copiado para a área de transferência!'),
+          () => showMessage('Não foi possível copiar automaticamente.', true),
+        );
+        return;
+      }
+
+      try {
+        const temp = document.createElement('textarea');
+        temp.value = texto;
+        temp.setAttribute('readonly', '');
+        temp.style.position = 'absolute';
+        temp.style.left = '-9999px';
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        showMessage('Resultado copiado para a área de transferência!');
+      } catch (err) {
+        showMessage('Não foi possível copiar automaticamente.', true);
+      }
+    }
+
+    function registrarHistorico(tipo, vencedores) {
+      historico.unshift({
+        tipo,
+        vencedores,
+        horario: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      });
+      historico = historico.slice(0, 5);
+      historicoEl.innerHTML = historico
+        .map(
+          (item) => `
+            <li class="border border-gray-200 dark:border-gray-800 rounded-lg p-3">
+              <div class="text-xs uppercase tracking-wide opacity-60">${item.tipo} - ${item.horario}</div>
+              <div class="mt-1 text-sm">${item.vencedores.join(', ')}</div>
+            </li>
+          `
+        )
+        .join('');
+    }
+  </script>
+</Base>

@@ -1,4 +1,4 @@
----
+﻿---
 import Base from '../layouts/BaseLayout.astro';
 import AdSlot from '../components/AdSlot.astro';
 
@@ -6,6 +6,7 @@ const items = [
   { href: '/calculadora-de-idade/', title: 'Idade', desc: 'Anos, meses e dias', icon: '🎂' },
   { href: '/calculadora-de-imc/', title: 'IMC', desc: 'Índice de massa corporal', icon: '⚖️' },
   { href: '/calculadora-de-porcentagem/', title: 'Porcentagem', desc: 'Quanto é X% de Y', icon: '💯' },
+  { href: '/calculadora-de-sorteios/', title: 'Gerador de Sorteios', desc: 'Sorteie nomes ou números', icon: '🎲' },
   { href: '/dias-entre-datas/', title: 'Dias entre datas', desc: 'Diferença em dias', icon: '📆' },
   { href: '/conversor-de-temperatura/', title: 'Temperatura', desc: 'Celsius, Fahrenheit, Kelvin', icon: '🌡️' },
   { href: '/conversor-de-unidades/', title: 'Unidades', desc: 'Comprimento, peso, volume', icon: '📏' },
@@ -14,6 +15,12 @@ const items = [
   { href: '/contador-de-palavras/', title: 'Palavras', desc: 'Contador de palavras/caracteres', icon: '✍️' },
   { href: '/calculadora-de-juros/', title: 'Juros', desc: 'Simples e compostos', icon: '💰' },
 ];
+const homeHidden = new Set([
+  '/calculadora-de-idade/',
+  '/calculadora-de-imc/',
+  '/calculadora-de-porcentagem/',
+  '/conversor-de-unidades/',
+]);
 ---
 
 <Base title="Calculadoras Online - Conta Rápida" description="Calculadoras Online Rápidas, Sem Complicação">
@@ -45,6 +52,26 @@ const items = [
     </p>
   </section>
 
+  <section class="mb-4">
+    <div class="rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800 p-4 sm:flex sm:items-center sm:justify-between gap-4">
+      <div class="flex items-start gap-3 text-center sm:text-left">
+        <div class="text-3xl" aria-hidden="true">🎲</div>
+        <div>
+          <p class="font-semibold text-blue-900 dark:text-blue-100">Novidade: Gerador de Sorteios e Números</p>
+          <p class="text-sm text-blue-800 dark:text-blue-200">Monte listas ou intervalos numéricos e sorteie vencedores em segundos.</p>
+        </div>
+      </div>
+      <a
+        href="/calculadora-de-sorteios/"
+        class="btn inline-flex items-center justify-center gap-2 whitespace-nowrap mt-3 sm:mt-0"
+        aria-label="Conhecer o novo gerador de sorteios"
+      >
+        Conhecer novidade
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
   <!-- Ad no topo do conteúdo -->
   <div class="mb-4">
     <div style="min-height:90px" class="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 p-2">
@@ -72,11 +99,80 @@ const items = [
     </details>
   </section>
 
+  <!-- Mini prévias -->
+  <section class="mt-8 grid gap-6 lg:grid-cols-3">
+    <div class="rounded-2xl border border-gray-200 dark:border-gray-800 p-5 bg-white/80 dark:bg-gray-900/50">
+      <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">⚖️ IMC rápido</h3>
+      <form id="form-imc-home" class="grid gap-3">
+        <label class="grid gap-1">
+          <span>Peso (kg)</span>
+          <input id="peso-home" type="number" step="0.1" min="1" class="input border rounded p-2" placeholder="70">
+        </label>
+        <label class="grid gap-1">
+          <span>Altura (cm)</span>
+          <input id="altura-home" type="number" step="0.1" min="30" class="input border rounded p-2" placeholder="170">
+        </label>
+        <button class="btn">Calcular IMC</button>
+      </form>
+      <div id="saida-imc-home" class="result mt-3 text-sm"></div>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 dark:border-gray-800 p-5 bg-white/80 dark:bg-gray-900/50">
+      <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">💯 Porcentagem express</h3>
+      <form id="form-porcent-home" class="grid gap-3">
+        <label class="grid gap-1">
+          <span>Percentual (%)</span>
+          <input id="porcent-home" type="number" step="0.1" class="input border rounded p-2" placeholder="15">
+        </label>
+        <label class="grid gap-1">
+          <span>De (valor)</span>
+          <input id="porcent-valor-home" type="number" step="0.01" class="input border rounded p-2" placeholder="200">
+        </label>
+        <button class="btn">Calcular</button>
+      </form>
+      <div id="saida-porcent-home" class="result mt-3 text-sm"></div>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 dark:border-gray-800 p-5 bg-white/80 dark:bg-gray-900/50">
+      <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">📏 Conversor de unidades</h3>
+      <form id="form-unidades-home" class="grid gap-3">
+        <label class="grid gap-1">
+          <span>Valor</span>
+          <input id="valor-unidades-home" type="number" step="0.0001" class="input border rounded p-2" placeholder="1">
+        </label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="grid gap-1">
+            <span>De</span>
+            <select id="de-unidades-home" class="input border rounded p-2">
+              <option value="km">km</option>
+              <option value="m" selected>m</option>
+              <option value="cm">cm</option>
+              <option value="mm">mm</option>
+            </select>
+          </label>
+          <label class="grid gap-1">
+            <span>Para</span>
+            <select id="para-unidades-home" class="input border rounded p-2">
+              <option value="km">km</option>
+              <option value="m">m</option>
+              <option value="cm" selected>cm</option>
+              <option value="mm">mm</option>
+            </select>
+          </label>
+        </div>
+        <button class="btn">Converter</button>
+      </form>
+      <div id="saida-unidades-home" class="result mt-3 text-sm"></div>
+    </div>
+  </section>
+
   <!-- Menu visual para as demais -->
   <section class="mt-8">
     <h2 class="text-xl font-semibold mb-3">Outras calculadoras</h2>
     <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map(i => (
+      {items
+        .filter(i => !homeHidden.has(i.href))
+        .map(i => (
         <li class="group p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:shadow-sm transition">
           <a href={i.href} class="no-underline block">
             <div class="flex items-start gap-3">
@@ -94,7 +190,6 @@ const items = [
 
   <!-- Ad no fim do conteúdo -->
   <div class="mt-8">
-    <!-- <Ad slotId="HOME_BOTTOM" /> -->
     <div style="min-height:90px" class="rounded-xl bg-gray-100 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-xs">
       <AdSlot slotId="3228575471" />
     </div>
@@ -102,6 +197,8 @@ const items = [
 
   <!-- Script precisa ficar dentro do <Base> -->
   <script is:inline>
+    const numberFormatter = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
+
     function diffYMD(from, to) {
       let y = to.getFullYear() - from.getFullYear();
       let m = to.getMonth() - from.getMonth();
@@ -123,6 +220,54 @@ const items = [
       const to = new Date();
       const { y, m, d } = diffYMD(from, to);
       document.getElementById('saida-home').textContent = `${y} anos, ${m} meses e ${d} dias`;
+    });
+
+    document.getElementById('form-imc-home').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const peso = parseFloat(document.getElementById('peso-home').value.replace(',', '.'));
+      const alturaCm = parseFloat(document.getElementById('altura-home').value.replace(',', '.'));
+      const saida = document.getElementById('saida-imc-home');
+      if (isNaN(peso) || isNaN(alturaCm) || peso <= 0 || alturaCm <= 0) {
+        saida.textContent = 'Informe peso e altura válidos.';
+        return;
+      }
+      const alturaM = alturaCm / 100;
+      const imc = peso / (alturaM * alturaM);
+      let classificacao = '';
+      if (imc < 18.5) classificacao = 'Abaixo do peso';
+      else if (imc < 25) classificacao = 'Peso ideal';
+      else if (imc < 30) classificacao = 'Sobrepeso';
+      else classificacao = 'Obesidade';
+      saida.textContent = `IMC: ${numberFormatter.format(imc)} (${classificacao})`;
+    });
+
+    document.getElementById('form-porcent-home').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pct = parseFloat(document.getElementById('porcent-home').value.replace(',', '.'));
+      const valor = parseFloat(document.getElementById('porcent-valor-home').value.replace(',', '.'));
+      const saida = document.getElementById('saida-porcent-home');
+      if (isNaN(pct) || isNaN(valor)) {
+        saida.textContent = 'Preencha percentual e valor.';
+        return;
+      }
+      const resultado = (pct / 100) * valor;
+      saida.textContent = `${pct}% de ${numberFormatter.format(valor)} = ${numberFormatter.format(resultado)}`;
+    });
+
+    document.getElementById('form-unidades-home').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const valor = parseFloat(document.getElementById('valor-unidades-home').value.replace(',', '.'));
+      const de = document.getElementById('de-unidades-home').value;
+      const para = document.getElementById('para-unidades-home').value;
+      const saida = document.getElementById('saida-unidades-home');
+      if (isNaN(valor)) {
+        saida.textContent = 'Informe um valor válido.';
+        return;
+      }
+      const fatores = { km: 1000, m: 1, cm: 0.01, mm: 0.001 };
+      const emMetros = valor * fatores[de];
+      const convertido = emMetros / fatores[para];
+      saida.textContent = `${numberFormatter.format(valor)} ${de} = ${numberFormatter.format(convertido)} ${para}`;
     });
   </script>
 </Base>
