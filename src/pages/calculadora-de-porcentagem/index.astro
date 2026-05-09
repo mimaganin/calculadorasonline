@@ -6,18 +6,17 @@ import Faq from '../../components/FaqSchema.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
-  { question: 'Como calcular X% de Y?', answer: 'Multiplique Y por X e divida por 100. Ex.: 15% de 200 = (15 × 200) ÷ 100 = 30.' },
-  { question: 'Como calcular desconto em porcentagem?', answer: 'Valor final = preço × (1 − desconto/100). Ex.: 200 com 15% off → 200 × 0,85 = 170.' },
-  { question: 'E se for aumento?', answer: 'Preço ajustado = preço × (1 + aumento/100). Ex.: 100 com +8% → 108.' },
-  { question: 'Como descobrir a porcentagem de diferença entre dois valores?', answer: 'Diferença% = (|novo − antigo| ÷ antigo) × 100.' },
-  { question: 'Posso usar vírgula?', answer: 'Use ponto para decimais (ex.: 12,5% → 12.5), por compatibilidade do navegador.' },
+  { question: 'Como calcular X% de Y?', answer: 'Multiplique o valor por percentual ÷ 100. Exemplo: 15% de 200 = 200 × 15 ÷ 100 = 30.' },
+  { question: 'Como calcular desconto em porcentagem?', answer: 'Calcule o valor do desconto e subtraia do preço original. Exemplo: 15% de 200 é 30; preço final = 170.' },
+  { question: 'Como calcular aumento percentual?', answer: 'Calcule o percentual sobre o valor inicial e some ao valor original. Exemplo: 8% de 100 é 8; valor final = 108.' },
+  { question: 'Como descobrir a porcentagem entre dois valores?', answer: 'Divida a diferença entre os valores pelo valor inicial e multiplique por 100. Exemplo: de 80 para 100 houve aumento de 25%.' },
+  { question: 'Posso usar vírgula?', answer: 'Use ponto para decimais no campo da calculadora, como 12.5 para representar 12,5%.' },
 ];
-
 ---
 
-<Base title="Calculadora de Porcentagem" description="Quanto é X% de Y e outras variações.">
+<Base title="Calculadora de Porcentagem Online" description="Calcule porcentagem, desconto, aumento percentual e diferença entre valores com exemplos práticos.">
   <Breadcrumbs />
-  <h1 class="text-2xl font-semibold mb-4">Calcular porcentagem</h1>
+  <h1 class="text-2xl font-semibold mb-4">Calculadora de porcentagem</h1>
 
   <form id="form-porcentagem" class="form-wrap grid gap-3">
     <label class="grid gap-1">
@@ -33,7 +32,7 @@ const faqs = [
     <button class="btn">Calcular</button>
   </form>
 
-  <div id="saida" class="result"></div>
+  <div id="saida" class="result" aria-live="polite"></div>
 
   <AdSlot slotId="6940589775" />
 
@@ -42,28 +41,49 @@ const faqs = [
       e.preventDefault();
       const p = parseFloat(document.getElementById('p').value);
       const v = parseFloat(document.getElementById('v').value);
-      if (isNaN(p) || isNaN(v)) {
-        document.getElementById('saida').textContent = 'Preencha os dois campos corretamente.';
+      const output = document.getElementById('saida');
+
+      if (Number.isNaN(p) || Number.isNaN(v)) {
+        output.textContent = 'Preencha os dois campos corretamente.';
         return;
       }
+
       const resultado = (p / 100) * v;
-      document.getElementById('saida').textContent = `${p}% de ${v} = ${resultado.toFixed(2)}`;
+      const desconto = v - resultado;
+      const aumento = v + resultado;
+
+      output.innerHTML = `
+        <strong>${p}% de ${v} = ${resultado.toFixed(2)}</strong><br>
+        Com desconto de ${p}%: ${desconto.toFixed(2)}<br>
+        Com aumento de ${p}%: ${aumento.toFixed(2)}
+      `;
     });
   </script>
 
   <section class="prose dark:prose-invert mt-6">
-    <h2>Como funciona o cálculo de porcentagem</h2>
-    <p>Porcentagem representa uma proporção de 100. Nossa calculadora resolve os casos mais comuns: “X% de Y”, descontos e aumentos, e permite testes rápidos para compras e comparações.</p>
+    <h2>Como calcular porcentagem</h2>
+    <p>Porcentagem é uma forma de representar uma parte de 100. Quando alguém pergunta quanto é 15% de 200, a conta é 200 × 15 ÷ 100. O resultado é 30.</p>
 
-    <h3>Exemplos úteis</h3>
+    <h3>Fórmula de porcentagem</h3>
+    <p><strong>Resultado = valor × percentual ÷ 100.</strong></p>
+
+    <h3>Exemplos comuns</h3>
     <ul>
-      <li><strong>Desconto:</strong> 15% de 200 = 30 → preço final = 170.</li>
-      <li><strong>Aumento:</strong> 8% sobre 100 = 8 → preço final = 108.</li>
-      <li><strong>Participação:</strong> 25% de 320 = 80.</li>
+      <li><strong>10% de 150:</strong> 150 × 10 ÷ 100 = 15.</li>
+      <li><strong>20% de 80:</strong> 80 × 20 ÷ 100 = 16.</li>
+      <li><strong>15% de 200:</strong> 200 × 15 ÷ 100 = 30.</li>
     </ul>
+  </section>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Desconto, aumento e diferença percentual</h2>
+    <p>Em compras, a porcentagem aparece principalmente em descontos e aumentos. Um desconto de 20% em um produto de 100 reduz o preço em 20, deixando o valor final em 80. Um aumento de 20% sobre 100 leva o valor para 120.</p>
+
+    <h3>Como calcular diferença percentual</h3>
+    <p>Para saber quanto um valor aumentou ou diminuiu em porcentagem, use: diferença percentual = (diferença ÷ valor inicial) × 100. Se um preço saiu de 80 para 100, a diferença é 20; 20 ÷ 80 × 100 = 25%.</p>
 
     <h3>Dica</h3>
-    <p>Para composições sucessivas (ex.: −10% e depois +10%), calcule passo a passo, porque a base muda após cada aplicação.</p>
+    <p>Para percentuais sucessivos, calcule em etapas. Um desconto de 10% seguido de aumento de 10% não volta exatamente ao valor original, porque a base do segundo cálculo muda.</p>
   </section>
 
   <Faq faqs={faqs} />

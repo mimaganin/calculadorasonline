@@ -6,15 +6,16 @@ import Faq from '../../components/FaqSchema.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
-  { question: 'A contagem inclui a data inicial?', answer: 'Calculamos a diferença absoluta entre as datas. Se precisar incluir a data inicial, some 1 ao resultado em dias.' },
-  { question: 'Considera anos bissextos?', answer: 'Sim. As datas são tratadas nativamente pelo navegador, incluindo bissextos e meses com durações distintas.' },
-  { question: 'Posso calcular em semanas?', answer: 'Mostramos dias e uma aproximação em semanas (dias ÷ 7). Para meses exatos, prefira comparar datas do mesmo dia.' },
-  { question: 'Fusos horários afetam o resultado?', answer: 'Usamos meia-noite local (T00:00:00) para minimizar diferenças de fuso ao criar os objetos de data.' },
+  { question: 'A contagem inclui a data inicial?', answer: 'Por padrão, calculamos a diferença entre as datas. Se quiser contar incluindo o primeiro dia, some 1 ao total.' },
+  { question: 'A calculadora considera anos bissextos?', answer: 'Sim. O cálculo usa datas reais do calendário, incluindo fevereiro com 29 dias em anos bissextos.' },
+  { question: 'Como calcular semanas entre datas?', answer: 'Depois de obter o total de dias, divida por 7. A calculadora já mostra uma aproximação em semanas.' },
+  { question: 'Como calcular meses entre duas datas?', answer: 'Meses podem ter 28, 29, 30 ou 31 dias. Por isso mostramos uma estimativa usando a média de 30,44 dias por mês.' },
+  { question: 'Fuso horário pode alterar o resultado?', answer: 'Usamos meia-noite local para reduzir diferenças de fuso. Para prazos oficiais, confirme sempre a regra específica do prazo.' },
 ];
-
 ---
 
-<Base title="Dias entre datas" description="Calcule a diferença de dias, semanas e meses entre duas datas.">
+<Base title="Calculadora de Dias Entre Datas" description="Calcule quantos dias existem entre duas datas e veja o resultado em semanas e meses aproximados.">
+  <Breadcrumbs />
   <h1 class="text-2xl font-semibold mb-4">Dias entre datas</h1>
 
   <form id="form-dias" class="form-wrap grid gap-3">
@@ -31,13 +32,16 @@ const faqs = [
     <button class="btn">Calcular</button>
   </form>
 
-  <div id="saida" class="result"></div>
+  <div id="saida" class="result" aria-live="polite"></div>
 
   <AdSlot slotId="6940589775" />
 
   <section class="prose dark:prose-invert mt-6">
-    <h2>Exemplo</h2>
-    <p>De 01/01/2025 até 31/12/2025 há 364 dias.</p>
+    <h2>Como calcular dias entre duas datas</h2>
+    <p>Informe a data inicial e a data final para descobrir a diferença em dias. A ferramenta também converte o resultado para semanas e meses aproximados, o que ajuda em prazos, viagens, contratos, estudos e planejamento pessoal.</p>
+
+    <h3>Exemplo</h3>
+    <p>De 01/01/2025 até 31/12/2025 há 364 dias. Se você quiser contar incluindo o dia inicial, use 365 dias.</p>
   </section>
 
   <script is:inline>
@@ -46,9 +50,10 @@ const faqs = [
 
       const a = document.getElementById('a').value;
       const b = document.getElementById('b').value;
+      const output = document.getElementById('saida');
 
       if (!a || !b) {
-        document.getElementById('saida').textContent = 'Selecione as duas datas.';
+        output.textContent = 'Selecione as duas datas.';
         return;
       }
 
@@ -57,23 +62,28 @@ const faqs = [
 
       const diffMs = Math.abs(dataB - dataA);
       const days = Math.floor(diffMs / 86400000);
+      const inclusiveDays = days + 1;
       const weeks = (days / 7).toFixed(2);
-      const months = (days / 30.44).toFixed(1); // média de dias por mês
+      const months = (days / 30.44).toFixed(1);
 
-      document.getElementById('saida').textContent =
-        `${days} dias (~${weeks} semanas ou ${months} meses)`;
+      output.innerHTML = `
+        <strong>${days} dias</strong><br>
+        ${weeks} semanas aproximadamente<br>
+        ${months} meses aproximadamente<br>
+        Incluindo a data inicial: ${inclusiveDays} dias
+      `;
     });
   </script>
 
   <section class="prose dark:prose-invert mt-6">
-    <h2>Calcule a diferença entre duas datas</h2>
-    <p>Informe a data inicial e final para ver o total de dias entre elas. Também exibimos uma aproximação em semanas para referência rápida.</p>
+    <h2>Quando usar a calculadora de datas</h2>
+    <p>A calculadora é útil para saber quantos dias faltam para um evento, medir intervalos entre datas, conferir prazos, calcular duração de projetos e transformar períodos em semanas.</p>
 
-    <h3>Exemplo</h3>
-    <p>De 01/01/2025 a 31/12/2025: 364 dias (~52,00 semanas).</p>
+    <h3>Diferença entre dias corridos e dias úteis</h3>
+    <p>Esta página calcula dias corridos, incluindo finais de semana e feriados dentro do intervalo. Dias úteis exigem uma regra diferente, porque dependem de feriados nacionais, estaduais, municipais e do calendário de cada organização.</p>
 
-    <h3>Dica</h3>
-    <p>Para prazos que começam hoje, selecione a data atual como início. Para incluir a data inicial no total, some 1 dia ao resultado.</p>
+    <h3>Datas futuras e passadas</h3>
+    <p>Você pode usar uma data futura ou passada. O cálculo sempre mostra a diferença absoluta entre as duas datas escolhidas.</p>
   </section>
 
   <Faq faqs={faqs} />

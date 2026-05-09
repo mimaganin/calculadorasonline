@@ -1,4 +1,5 @@
 import { CALCS } from '../data/calculators.js';
+import { IMC_EXAMPLES, PERCENTAGE_EXAMPLES } from '../data/seo-examples.js';
 
 export const prerender = true;
 
@@ -19,7 +20,20 @@ export async function GET({ site }) {
     changefreq: 'monthly',
   }));
 
-  const urls = [...staticPages, ...calcPages];
+  const longTailPages = [
+    ...PERCENTAGE_EXAMPLES.map(({ porcentagem, valor }) => ({
+      url: `/calculadora-de-porcentagem/${porcentagem}-de-${valor}/`,
+      priority: 0.6,
+      changefreq: 'yearly',
+    })),
+    ...IMC_EXAMPLES.map(({ altura, peso }) => ({
+      url: `/calculadora-de-imc/${altura}-${peso}/`,
+      priority: 0.6,
+      changefreq: 'yearly',
+    })),
+  ];
+
+  const urls = [...staticPages, ...calcPages, ...longTailPages];
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
