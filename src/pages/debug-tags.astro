@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/BaseLayout.astro';
+---
+
+<Base
+  title="Debug de tags"
+  description="Diagnóstico temporário de carregamento das tags Google."
+  robots="noindex,nofollow"
+>
+  <h1 class="text-2xl font-semibold mb-4">Debug de tags</h1>
+
+  <section class="prose dark:prose-invert">
+    <p>Esta página verifica no navegador se GA4, AdSense e Funding Choices foram carregados em runtime.</p>
+  </section>
+
+  <button id="run-debug" class="btn mt-4" type="button">Rodar diagnóstico</button>
+
+  <pre
+    id="debug-output"
+    class="mt-4 whitespace-pre-wrap rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-4 text-xs overflow-auto"
+  >Carregando...</pre>
+
+  <script is:inline>
+    (function () {
+      const output = document.getElementById('debug-output');
+      const button = document.getElementById('run-debug');
+
+      function resourceRows() {
+        return performance
+          .getEntriesByType('resource')
+          .filter((entry) => /googletagmanager|google-analytics|googlesyndication|fundingchoices|doubleclick/.test(entry.name))
+          .map((entry) => ({
+            name: entry.name,
+            initiatorType: entry.initiatorType,
+            duration: Math.round(entry.duration),
+            transferSize: entry.transferSize,
+            encodedBodySize: entry.encodedBodySize,
+            decodedBodySize: entry.decodedBodySize,
+            responseStatus: entry.responseStatus || null,
+          }));
+      }
+
+      function dataLayerRows() {
+        return (window.dataLayer || []).map((item) => {
+          try {
+            return Array.from(item).slice(0, 4);
+          } catch (_) {
+            return item;
+          }
+        });
+      }
+
+      function collect() {
+        return {
+          timestamp: new Date().toISOString(),
+          page: location.href,
+          userAgent: navigator.userAgent,
+          cookieEnabled: navigator.cookieEnabled,
+          doNotTrack: navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack || null,
+          globals: {
+            gtag: typeof window.gtag,
+            dataLayerLength: Array.isArray(window.dataLayer) ? window.dataLayer.length : null,
+            adsbygoogle: typeof window.adsbygoogle,
+            adsbygoogleLength: Array.isArray(window.adsbygoogle) ? window.adsbygoogle.length : null,
+            googlefcPresentFrame: Boolean(window.frames && window.frames.googlefcPresent),
+          },
+          dataLayer: dataLayerRows(),
+          resources: resourceRows(),
+        };
+      }
+
+      function render() {
+        output.textContent = JSON.stringify(collect(), null, 2);
+      }
+
+      button.addEventListener('click', render);
+
+      if (document.readyState === 'complete') {
+        setTimeout(render, 1500);
+      } else {
+        window.addEventListener('load', () => setTimeout(render, 1500));
+      }
+    })();
+  </script>
+</Base>
