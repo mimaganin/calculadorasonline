@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import { CALCS } from '../data/calculators.js';
-import CookieConsent from '../components/CookieConsent.astro';
 import AdSlot from '../components/AdSlot.astro';
 
 const SITE_URL = 'https://conta-rapida.com';
@@ -140,7 +139,6 @@ const seoTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 </head>
 
   <body>
-    <CookieConsent />
     <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-950">
       <!-- Header fixo -->
       <header class="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-gray-950/60 border-b border-gray-200/70 dark:border-gray-800">
