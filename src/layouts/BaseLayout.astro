@@ -4,10 +4,20 @@ import { CALCS } from '../data/calculators.js';
 import CookieConsent from '../components/CookieConsent.astro';
 import AdSlot from '../components/AdSlot.astro';
 
+const SITE_URL = 'https://conta-rapida.com';
+const GA_MEASUREMENT_ID = 'G-E1TZBLE3G1';
+
 const {
   title = 'Calculadoras Online - Conta Rápida',
   description = 'Calculadoras online para facilitar seu dia a dia: idade, IMC, juros e mais!',
+  canonical,
+  image = '/android-chrome-512x512.png',
 } = Astro.props;
+
+const pageUrl = new URL(canonical || Astro.url.pathname, SITE_URL);
+const imageUrl = new URL(image, SITE_URL);
+const siteName = 'Conta Rápida';
+const seoTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 ---
 
 <html lang="pt">
@@ -15,8 +25,10 @@ const {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>{title}</title>
+  <title>{seoTitle}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={pageUrl.href} />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
 
   <!-- Favicon e ícones -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -31,23 +43,29 @@ const {
   <meta name="theme-color" content="#2563eb">
 
   <!-- SEO e compartilhamento -->
-  <meta property="og:title" content={title}>
+  <meta property="og:title" content={seoTitle}>
   <meta property="og:description" content={description}>
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://conta-rapida.com">
-  <meta property="og:image" content="/android-chrome-512x512.png">
+  <meta property="og:url" content={pageUrl.href}>
+  <meta property="og:image" content={imageUrl.href}>
+  <meta property="og:site_name" content={siteName}>
+  <meta property="og:locale" content="pt_BR">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content={title}>
+  <meta name="twitter:title" content={seoTitle}>
   <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={imageUrl.href}>
 
   <!-- Performance -->
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
   <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
 
-  <!-- Google tag (GA4) + Consent Mode (default: denied) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E1TZBLE3G1"></script>
+  <!-- Google tag (GA4) -->
+  <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
   <script is:inline>
-    // Consent Mode v2: tudo negado até a CMP/botão aceitar
+    // Consent Mode v2: medição básica ativa; anúncios só após aceite.
+    const GA_MEASUREMENT_ID = 'G-E1TZBLE3G1';
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
 
@@ -55,14 +73,17 @@ const {
       'ad_storage': 'denied',
       'ad_user_data': 'denied',
       'ad_personalization': 'denied',
-      'analytics_storage': 'denied'
+      'analytics_storage': 'granted'
     });
 
     gtag('js', new Date());
     // Dica: anonimização de IP ajuda GDPR
-    gtag('config', 'G-E1TZBLE3G1', { 'anonymize_ip': true });
+    gtag('config', GA_MEASUREMENT_ID, {
+      'anonymize_ip': true,
+      'send_page_view': true
+    });
 
-    // Fallback para regiões fora da UE (se você usar seu CookieConsent custom)
+    // Usado pelo banner local quando o visitante aceita cookies de publicidade.
     window.enableAnalyticsAndAds = function () {
       gtag('consent', 'update', {
         'ad_storage': 'granted',
@@ -72,6 +93,22 @@ const {
       });
     };
   </script>
+
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteName,
+      url: SITE_URL,
+      inLanguage: 'pt-BR',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${SITE_URL}/calculadoras/?q={search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
+    })}
+  ></script>
 
   <!-- Google CMP (Funding Choices) - mostra a mensagem no EEE/UK/CH -->
   <script async src="https://fundingchoicesmessages.google.com/i/pub-0421373105939215?ers=1"></script>

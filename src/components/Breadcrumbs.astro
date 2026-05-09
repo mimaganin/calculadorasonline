@@ -61,7 +61,7 @@ const ld = shouldRender ? {
     "@type": "ListItem",
     "position": idx + 1,
     "name": it.name,
-    "item": `https://conta-rapida.com${it.url}`
+    "item": new URL(it.url, 'https://conta-rapida.com').href
   }))
 } : null;
 ---

@@ -3,7 +3,7 @@ import { CALCS } from '../data/calculators.js';
 export const prerender = true;
 
 export async function GET({ site }) {
-  const base = site || 'https://www.conta-rapida.com';
+  const base = site || 'https://conta-rapida.com';
   const now = new Date().toISOString();
 
   const staticPages = [
@@ -26,7 +26,7 @@ export async function GET({ site }) {
 ${urls
   .map(
     u => `<url>
-  <loc>${base}${u.url}</loc>
+  <loc>${new URL(u.url, base).href}</loc>
   <lastmod>${now}</lastmod>
   <changefreq>${u.changefreq}</changefreq>
   <priority>${u.priority}</priority>
