@@ -24,6 +24,74 @@ import Base from '../layouts/BaseLayout.astro';
     (function () {
       const output = document.getElementById('debug-output');
       const button = document.getElementById('run-debug');
+      const probes = [];
+
+      function addProbe(name, result) {
+        probes.push({
+          name,
+          timestamp: new Date().toISOString(),
+          ...result,
+        });
+      }
+
+      function loadScriptProbe(name, src) {
+        return new Promise((resolve) => {
+          const script = document.createElement('script');
+          const startedAt = performance.now();
+          script.async = true;
+          script.src = src;
+          script.onload = () => {
+            const result = {
+              ok: true,
+              event: 'load',
+              duration: Math.round(performance.now() - startedAt),
+            };
+            addProbe(name, result);
+            resolve(result);
+          };
+          script.onerror = () => {
+            const result = {
+              ok: false,
+              event: 'error',
+              duration: Math.round(performance.now() - startedAt),
+            };
+            addProbe(name, result);
+            resolve(result);
+          };
+          document.head.appendChild(script);
+        });
+      }
+
+      async function beaconProbe() {
+        const params = new URLSearchParams({
+          v: '2',
+          tid: 'G-E1TZBLE3G1',
+          cid: `debug-${Date.now()}`,
+          en: 'debug_probe',
+          _p: String(Date.now()),
+          dl: location.href,
+          dt: document.title,
+        });
+        const url = `https://www.google-analytics.com/g/collect?${params.toString()}`;
+        const startedAt = performance.now();
+        try {
+          const ok = navigator.sendBeacon ? navigator.sendBeacon(url) : false;
+          addProbe('ga4-sendBeacon', {
+            ok,
+            url,
+            duration: Math.round(performance.now() - startedAt),
+          });
+          return ok;
+        } catch (error) {
+          addProbe('ga4-sendBeacon', {
+            ok: false,
+            url,
+            error: error && error.message ? error.message : String(error),
+            duration: Math.round(performance.now() - startedAt),
+          });
+          return false;
+        }
+      }
 
       function resourceRows() {
         return performance
@@ -65,6 +133,7 @@ import Base from '../layouts/BaseLayout.astro';
             googlefcPresentFrame: Boolean(window.frames && window.frames.googlefcPresent),
           },
           dataLayer: dataLayerRows(),
+          probes,
           resources: resourceRows(),
         };
       }
@@ -74,6 +143,12 @@ import Base from '../layouts/BaseLayout.astro';
       }
 
       button.addEventListener('click', render);
+
+      Promise.allSettled([
+        loadScriptProbe('gtag-dynamic', `https://www.googletagmanager.com/gtag/js?id=G-E1TZBLE3G1&debug_probe=${Date.now()}`),
+        loadScriptProbe('adsense-dynamic', `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0421373105939215&debug_probe=${Date.now()}`),
+        beaconProbe(),
+      ]).then(() => setTimeout(render, 1200));
 
       if (document.readyState === 'complete') {
         setTimeout(render, 1500);
