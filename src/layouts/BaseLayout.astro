@@ -4,8 +4,6 @@ import { CALCS } from '../data/calculators.js';
 import AdSlot from '../components/AdSlot.astro';
 
 const SITE_URL = 'https://conta-rapida.com';
-const GA_MEASUREMENT_ID = 'G-E1TZBLE3G1';
-
 const {
   title = 'Calculadoras Online - Conta Rápida',
   description = 'Calculadoras online para facilitar seu dia a dia: idade, IMC, juros e mais!',
@@ -61,36 +59,13 @@ const seoTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
 
   <!-- Google tag (GA4) -->
-  <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E1TZBLE3G1"></script>
   <script is:inline>
-    // Consent Mode v2: medição básica ativa; anúncios só após aceite.
-    const GA_MEASUREMENT_ID = 'G-E1TZBLE3G1';
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
 
-    gtag('consent', 'default', {
-      'ad_storage': 'denied',
-      'ad_user_data': 'denied',
-      'ad_personalization': 'denied',
-      'analytics_storage': 'granted'
-    });
-
     gtag('js', new Date());
-    // Dica: anonimização de IP ajuda GDPR
-    gtag('config', GA_MEASUREMENT_ID, {
-      'anonymize_ip': true,
-      'send_page_view': true
-    });
-
-    // Usado pelo banner local quando o visitante aceita cookies de publicidade.
-    window.enableAnalyticsAndAds = function () {
-      gtag('consent', 'update', {
-        'ad_storage': 'granted',
-        'ad_user_data': 'granted',
-        'ad_personalization': 'granted',
-        'analytics_storage': 'granted'
-      });
-    };
+    gtag('config', 'G-E1TZBLE3G1');
   </script>
 
   <script
