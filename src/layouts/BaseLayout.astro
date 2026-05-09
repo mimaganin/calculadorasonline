@@ -67,6 +67,82 @@ const seoTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 
     gtag('js', new Date());
     gtag('config', 'G-E1TZBLE3G1');
+
+    (function () {
+      const FALLBACK_KEY = 'cr_ga4_cid';
+      const SESSION_KEY = 'cr_ga4_session';
+
+      function getStoredId() {
+        try {
+          let cid = localStorage.getItem(FALLBACK_KEY);
+          if (!cid) {
+            cid = `${Date.now()}.${Math.random().toString(36).slice(2)}`;
+            localStorage.setItem(FALLBACK_KEY, cid);
+          }
+          return cid;
+        } catch (_) {
+          return `${Date.now()}.${Math.random().toString(36).slice(2)}`;
+        }
+      }
+
+      function getSessionId() {
+        try {
+          const now = Date.now();
+          const saved = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+          if (saved && saved.id && saved.expiresAt > now) {
+            saved.expiresAt = now + 30 * 60 * 1000;
+            sessionStorage.setItem(SESSION_KEY, JSON.stringify(saved));
+            return saved.id;
+          }
+
+          const next = { id: String(Math.floor(now / 1000)), expiresAt: now + 30 * 60 * 1000 };
+          sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
+          return next.id;
+        } catch (_) {
+          return String(Math.floor(Date.now() / 1000));
+        }
+      }
+
+      function gtagLoaderHasBody() {
+        return performance
+          .getEntriesByType('resource')
+          .some((entry) =>
+            entry.name.includes('googletagmanager.com/gtag/js') &&
+            (entry.encodedBodySize > 0 || entry.decodedBodySize > 0 || entry.transferSize > 300)
+          );
+      }
+
+      function sendFallbackPageView() {
+        if (window.__crGa4FallbackSent || gtagLoaderHasBody()) return;
+        window.__crGa4FallbackSent = true;
+
+        const params = new URLSearchParams({
+          v: '2',
+          tid: 'G-E1TZBLE3G1',
+          cid: getStoredId(),
+          sid: getSessionId(),
+          sct: '1',
+          seg: '1',
+          en: 'page_view',
+          _p: String(Date.now()),
+          dl: location.href,
+          dt: document.title,
+          dr: document.referrer || '',
+          ul: navigator.language || '',
+          sr: `${screen.width}x${screen.height}`,
+        });
+
+        const url = `https://www.google-analytics.com/g/collect?${params.toString()}`;
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(url);
+        } else {
+          const img = new Image();
+          img.src = url;
+        }
+      }
+
+      setTimeout(sendFallbackPageView, 2500);
+    })();
   </script>
 
   <script
