@@ -1,17 +1,41 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
+import { PERCENTAGE_EXAMPLES } from '../../data/seo-examples.js';
+
 export async function getStaticPaths() {
-  return [
-    { params: { porcentagem: '15', valor: '200' } },
-    { params: { porcentagem: '10', valor: '150' } },
-  ];
+  return PERCENTAGE_EXAMPLES.map(({ porcentagem, valor }) => ({ params: { porcentagem, valor } }));
 }
+
 const { porcentagem, valor } = Astro.params;
-const res = (Number(porcentagem)/100) * Number(valor);
-const title = `${porcentagem}% de ${valor}`;
+const percent = Number(porcentagem);
+const amount = Number(valor);
+const res = (percent / 100) * amount;
+const discount = amount - res;
+const increase = amount + res;
+const title = `Quanto é ${porcentagem}% de ${valor}?`;
 ---
-<Base {title} description={`Resultado de ${porcentagem}% de ${valor}.`} robots="noindex,follow">
+
+<Base {title} description={`${porcentagem}% de ${valor} é ${res.toFixed(2)}. Veja a conta, fórmula, desconto e aumento usando essa porcentagem.`}>
   <h1 class="text-2xl font-semibold mb-2">{title}</h1>
-  <p class="text-lg"><strong>= {res}</strong></p>
+  <p class="text-lg"><strong>{porcentagem}% de {valor} = {res.toFixed(2)}</strong></p>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Como calcular {porcentagem}% de {valor}</h2>
+    <p>Para calcular {porcentagem}% de {valor}, multiplique {valor} por {porcentagem} e divida por 100.</p>
+    <p><strong>Conta:</strong> {valor} × {porcentagem} ÷ 100 = {res.toFixed(2)}.</p>
+
+    <h3>Se for desconto</h3>
+    <p>Um desconto de {porcentagem}% em {valor} reduz o valor em {res.toFixed(2)}. O valor final fica {discount.toFixed(2)}.</p>
+
+    <h3>Se for aumento</h3>
+    <p>Um aumento de {porcentagem}% sobre {valor} acrescenta {res.toFixed(2)}. O valor final fica {increase.toFixed(2)}.</p>
+
+    <h3>Quando essa conta é útil</h3>
+    <p>Esse cálculo aparece em descontos de compras, reajustes, comissões, taxas, gorjetas, variações de preço e comparações rápidas. Saber o valor de {porcentagem}% de {valor} também ajuda a conferir se uma promoção ou cobrança está correta.</p>
+
+    <h3>Fórmula geral</h3>
+    <p>Use a mesma lógica para qualquer percentual: resultado = valor × percentual ÷ 100. Se quiser calcular outro número, volte para a calculadora de porcentagem e informe os valores desejados.</p>
+  </section>
+
   <p class="mt-4"><a href="/calculadora-de-porcentagem/">Calcular outro</a></p>
 </Base>

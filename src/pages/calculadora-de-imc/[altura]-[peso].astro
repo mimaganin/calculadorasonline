@@ -1,20 +1,42 @@
 ---
 import Base from '../../layouts/BaseLayout.astro';
+import { IMC_EXAMPLES } from '../../data/seo-examples.js';
+
 export async function getStaticPaths() {
-  return [
-    { params: { altura: '175', peso: '70' } },
-    { params: { altura: '160', peso: '50' } },
-  ];
+  return IMC_EXAMPLES.map(({ altura, peso }) => ({ params: { altura, peso } }));
 }
+
 const { altura, peso } = Astro.params;
-const h = Number(altura)/100;
+const h = Number(altura) / 100;
 const p = Number(peso);
-const imc = p/(h*h);
-function cat(v){ if(v<18.5) return 'Abaixo do peso'; if(v<25) return 'Peso normal'; if(v<30) return 'Sobrepeso'; return 'Obesidade'; }
-const title = `IMC para ${peso}kg e ${altura}cm`;
+const imc = p / (h * h);
+function cat(v) {
+  if (v < 18.5) return 'baixo peso';
+  if (v < 25) return 'peso normal';
+  if (v < 30) return 'sobrepeso';
+  return 'obesidade';
+}
+const title = `IMC de ${peso}kg e ${altura}cm`;
 ---
-<Base {title} description={`Resultado de IMC para ${peso} kg e ${altura} cm.`} robots="noindex,follow">
+
+<Base {title} description={`O IMC de uma pessoa com ${peso} kg e ${altura} cm é ${imc.toFixed(1)}. Veja a fórmula e a classificação do resultado.`}>
   <h1 class="text-2xl font-semibold mb-2">{title}</h1>
-  <p class="text-lg">IMC: <strong>{imc.toFixed(1)}</strong> — {cat(imc)}</p>
+  <p class="text-lg">IMC: <strong>{imc.toFixed(1)}</strong> - {cat(imc)}</p>
+
+  <section class="prose dark:prose-invert mt-6">
+    <h2>Como calcular esse IMC</h2>
+    <p>Para calcular o IMC, use a fórmula: peso ÷ (altura × altura). Como {altura} cm equivalem a {h.toFixed(2)} m, a conta fica:</p>
+    <p><strong>{peso} ÷ ({h.toFixed(2)} × {h.toFixed(2)}) = {imc.toFixed(1)}</strong>.</p>
+
+    <h3>Classificação</h3>
+    <p>Na classificação geral para adultos, um IMC de {imc.toFixed(1)} fica na faixa de {cat(imc)}. Esse resultado é informativo e não substitui avaliação profissional.</p>
+
+    <h3>O que esse número não mostra</h3>
+    <p>O IMC não diferencia massa muscular, gordura corporal, retenção de líquidos ou distribuição de peso. Por isso, pessoas com o mesmo IMC podem ter condições físicas diferentes.</p>
+
+    <h3>Como usar o resultado</h3>
+    <p>Use o valor como uma referência inicial para entender a relação entre peso e altura. Para interpretar o resultado de forma individual, especialmente em caso de sintomas, doenças, gestação ou rotina esportiva intensa, procure um profissional de saúde.</p>
+  </section>
+
   <p class="mt-4"><a href="/calculadora-de-imc/">Calcular outros valores</a></p>
 </Base>

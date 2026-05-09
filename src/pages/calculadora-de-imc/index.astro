@@ -6,17 +6,15 @@ import Faq from '../../components/FaqSchema.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
-  { question: 'Qual é a fórmula do IMC?', answer: 'IMC = peso (kg) ÷ [altura (m)]². Ex.: 70 ÷ 1,75² = 22,9.' },
-  { question: 'IMC serve para qualquer pessoa?', answer: 'É um indicador populacional. Não considera composição corporal, gestantes, idosos, atletas e condições específicas. Use como referência, não diagnóstico.' },
-  { question: 'Qual a classificação do resultado?', answer: 'Abaixo de 18,5: baixo peso; 18,5–24,9: normal; 25–29,9: sobrepeso; 30+: obesidade. Consulte seu médico para interpretação individual.' },
-  { question: 'Posso usar altura em cm?', answer: 'Não diretamente. Informe em metros com ponto decimal (ex.: 170 cm = 1.70).' },
-  { question: 'O IMC muda com a idade?', answer: 'A fórmula é a mesma, mas a interpretação pode variar com idade e contexto clínico. Procure um profissional de saúde para avaliação completa.' },
+  { question: 'Qual é a fórmula do IMC?', answer: 'IMC = peso em kg dividido pela altura em metros ao quadrado. Por exemplo: 70 ÷ 1,75² = 22,9.' },
+  { question: 'Como calcular IMC com altura em centímetros?', answer: 'Converta centímetros para metros antes de calcular. Uma altura de 175 cm vira 1,75 m. Depois divida o peso por 1,75 × 1,75.' },
+  { question: 'IMC serve para qualquer pessoa?', answer: 'O IMC é uma referência geral para adultos. Ele não considera composição corporal, gestação, idade avançada, infância, alto volume muscular ou condições clínicas específicas.' },
+  { question: 'Qual é a classificação do IMC?', answer: 'Abaixo de 18,5 indica baixo peso; 18,5 a 24,9 indica peso normal; 25 a 29,9 indica sobrepeso; 30 ou mais indica obesidade.' },
+  { question: 'IMC substitui avaliação médica?', answer: 'Não. O resultado é apenas informativo. Procure um profissional de saúde para interpretar o número dentro do seu contexto.' },
 ];
-
 ---
 
-<Base title="Calculadora de IMC" description="Calcule seu Índice de Massa Corporal rapidamente.">
-
+<Base title="Calculadora de IMC Online" description="Calcule o IMC com peso e altura, veja a fórmula do índice de massa corporal e entenda a classificação do resultado.">
   <Breadcrumbs />
 
   <h1 class="text-2xl font-semibold mb-4">Calculadora de IMC</h1>
@@ -35,26 +33,37 @@ const faqs = [
     <button class="btn">Calcular</button>
   </form>
 
-  <div id="saida" class="result"></div>
+  <div id="saida" class="result" aria-live="polite"></div>
 
   <AdSlot slotId="6940589775" />
 
   <section class="prose dark:prose-invert mt-6">
-    <h2>O que é IMC</h2>
-    <p>IMC = peso ÷ (altura × altura). Exemplo: 70 ÷ (1,75²) = 22,9.</p>
-    <ul>
-      <li>Abaixo de 18,5 → Abaixo do peso</li>
-      <li>18,5 a 24,9 → Peso normal</li>
-      <li>25 a 29,9 → Sobrepeso</li>
-      <li>30+ → Obesidade</li>
-    </ul>
+    <h2>Como calcular o IMC</h2>
+    <p>O Índice de Massa Corporal relaciona peso e altura para estimar uma faixa geral de peso em adultos. A fórmula é simples: divida o peso em quilogramas pela altura em metros elevada ao quadrado.</p>
+    <p><strong>Fórmula:</strong> IMC = peso ÷ (altura × altura).</p>
+
+    <h3>Exemplo de cálculo</h3>
+    <p>Uma pessoa com 70 kg e 1,75 m tem IMC = 70 ÷ (1,75 × 1,75) = 22,9. Pela classificação geral, esse resultado fica na faixa de peso normal.</p>
+
+    <h3>Tabela de classificação do IMC</h3>
+    <table>
+      <thead>
+        <tr><th>IMC</th><th>Classificação</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Menor que 18,5</td><td>Baixo peso</td></tr>
+        <tr><td>18,5 a 24,9</td><td>Peso normal</td></tr>
+        <tr><td>25 a 29,9</td><td>Sobrepeso</td></tr>
+        <tr><td>30 ou mais</td><td>Obesidade</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <script is:inline>
-    function categoria(imc){
-      if (imc < 18.5) return 'Abaixo do peso';
-      if (imc < 25)   return 'Peso normal';
-      if (imc < 30)   return 'Sobrepeso';
+    function categoria(imc) {
+      if (imc < 18.5) return 'Baixo peso';
+      if (imc < 25) return 'Peso normal';
+      if (imc < 30) return 'Sobrepeso';
       return 'Obesidade';
     }
 
@@ -62,23 +71,27 @@ const faqs = [
       e.preventDefault();
       const h = parseFloat(document.getElementById('altura').value);
       const p = parseFloat(document.getElementById('peso').value);
-      if (!h || !p || h <= 0) return;
+      const output = document.getElementById('saida');
+
+      if (!h || !p || h <= 0 || p <= 0) {
+        output.textContent = 'Informe altura e peso válidos.';
+        return;
+      }
 
       const imc = p / (h * h);
-      document.getElementById('saida').textContent = `IMC: ${imc.toFixed(1)} — ${categoria(imc)}`;
+      output.textContent = `IMC: ${imc.toFixed(1)} - ${categoria(imc)}`;
     });
   </script>
-  
+
   <section class="prose dark:prose-invert mt-6">
-    <h2>Como funciona o cálculo do IMC</h2>
-    <p>O Índice de Massa Corporal (IMC) é um indicador simples que relaciona peso e altura para estimar a faixa de peso em adultos. Ele é útil para triagem e acompanhamento geral, mas não substitui avaliação clínica.</p>
-    <p>Para calcular: divida o peso em quilogramas pela altura em metros elevada ao quadrado. Nossa calculadora faz essa conta e já mostra a categoria correspondente.</p>
+    <h2>O que observar no resultado</h2>
+    <p>O IMC é útil como triagem, mas não mostra distribuição de gordura, massa muscular ou outros fatores de saúde. Atletas, gestantes, idosos, adolescentes e pessoas com condições específicas podem precisar de outros indicadores.</p>
 
-    <h3>Exemplo</h3>
-    <p>Uma pessoa com 70 kg e 1,75 m: IMC = 70 ÷ (1,75 × 1,75) = 22,9 (faixa “normal”).</p>
+    <h3>Altura em metros ou centímetros</h3>
+    <p>A calculadora usa altura em metros. Se você tem 175 cm, digite 1.75. Se tem 160 cm, digite 1.60.</p>
 
-    <h3>Limitações</h3>
-    <p>O IMC não distingue massa muscular de gordura corporal. Atletas, gestantes, idosos e pessoas com condições específicas podem precisar de outras medidas (ex.: circunferência abdominal, composição corporal).</p>
+    <h3>Resultado informativo</h3>
+    <p>Use o número como referência inicial. Para decisões sobre dieta, treino, saúde ou tratamento, procure orientação profissional.</p>
   </section>
 
   <Faq faqs={faqs} />

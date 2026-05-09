@@ -6,17 +6,16 @@ import Faq from '../../components/FaqSchema.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const faqs = [
-  { question: 'Como o contador funciona?', answer: 'Contamos palavras por grupos de caracteres não-brancos e caracteres por comprimento do texto. É tudo local no seu navegador.' },
-  { question: 'O contador inclui espaços?', answer: 'A contagem de caracteres inclui espaços; a de palavras ignora múltiplos espaços e quebras de linha.' },
-  { question: 'Há limite de tamanho?', answer: 'Funciona bem para textos longos. Navegadores modernos suportam colagem de milhares de caracteres.' },
-  { question: 'Meus dados são enviados ao servidor?', answer: 'Não. O cálculo roda 100% no seu navegador, sem envio de dados.' },
-  { question: 'Posso usar para redes sociais?', answer: 'Sim. É útil para limites de bio, legendas e metadescrições.' },
+  { question: 'Como contar palavras online?', answer: 'Cole ou digite o texto no campo da ferramenta. A contagem de palavras, caracteres, frases, parágrafos e tempo de leitura é atualizada automaticamente.' },
+  { question: 'O contador inclui espaços?', answer: 'Mostramos duas métricas: caracteres com espaços e caracteres sem espaços. A contagem de palavras ignora espaços repetidos e quebras de linha.' },
+  { question: 'Meus dados são enviados ao servidor?', answer: 'Não. O cálculo roda no seu navegador, sem enviar o texto para servidores.' },
+  { question: 'Serve para meta description e redes sociais?', answer: 'Sim. A ferramenta ajuda a ajustar textos curtos para descrições, bios, legendas, títulos e limites de caracteres.' },
+  { question: 'Como o tempo de leitura é calculado?', answer: 'Usamos uma estimativa simples de 200 palavras por minuto. O número é aproximado e serve como referência rápida.' },
 ];
-
 ---
 
-<Base title="Contador de palavras e caracteres" description="Conte palavras e caracteres do seu texto online.">
-  <!-- CSS já importado no layout -->
+<Base title="Contador de Palavras e Caracteres Online" description="Conte palavras, caracteres com e sem espaços, frases, parágrafos e estime o tempo de leitura do seu texto.">
+  <Breadcrumbs />
   <h1 class="text-2xl font-semibold mb-4">Contador de palavras e caracteres</h1>
 
   <div class="form-wrap">
@@ -24,43 +23,64 @@ const faqs = [
       id="txt"
       rows="8"
       class="input border rounded p-3 w-full"
-      placeholder="Cole seu texto aqui...">
-    </textarea>
+      placeholder="Cole ou digite seu texto aqui..."
+    ></textarea>
 
-    <div id="saida" class="result">
-      0 palavras — 0 caracteres
+    <div class="result grid gap-2 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+      <strong id="words">0 palavras</strong>
+      <span id="chars">0 caracteres</span>
+      <span id="chars-no-spaces">0 sem espaços</span>
+      <span id="sentences">0 frases</span>
+      <span id="paragraphs">0 parágrafos</span>
+      <span id="reading-time">menos de 1 min de leitura</span>
     </div>
   </div>
 
   <AdSlot slotId="6940589775" />
 
   <section class="prose dark:prose-invert mt-6">
-    <h2>Dica</h2>
-    <p>Útil para redações, redes sociais e metadescrições.</p>
+    <h2>Conte palavras, caracteres e tempo de leitura</h2>
+    <p>Use o contador para revisar textos de redação, artigos, descrições de produtos, posts de blog, legendas, biografias e metadescrições. A ferramenta mostra a quantidade de palavras e também separa caracteres com espaços e sem espaços.</p>
   </section>
 
   <script is:inline>
     const txtEl = document.getElementById('txt');
-    const saidaEl = document.getElementById('saida');
+    const wordsEl = document.getElementById('words');
+    const charsEl = document.getElementById('chars');
+    const charsNoSpacesEl = document.getElementById('chars-no-spaces');
+    const sentencesEl = document.getElementById('sentences');
+    const paragraphsEl = document.getElementById('paragraphs');
+    const readingTimeEl = document.getElementById('reading-time');
 
     function count(t) {
+      const trimmed = t.trim();
       const chars = t.length;
-      const words = (t.trim().match(/\S+/g) || []).length;
-      saidaEl.textContent = `${words} palavras — ${chars} caracteres`;
+      const charsNoSpaces = t.replace(/\s/g, '').length;
+      const words = (trimmed.match(/\S+/g) || []).length;
+      const sentences = (trimmed.match(/[^.!?]+[.!?]+/g) || (trimmed ? [trimmed] : [])).length;
+      const paragraphs = trimmed ? trimmed.split(/\n\s*\n/).filter(Boolean).length : 0;
+      const minutes = Math.max(1, Math.ceil(words / 200));
+
+      wordsEl.textContent = `${words} ${words === 1 ? 'palavra' : 'palavras'}`;
+      charsEl.textContent = `${chars} caracteres`;
+      charsNoSpacesEl.textContent = `${charsNoSpaces} sem espaços`;
+      sentencesEl.textContent = `${sentences} ${sentences === 1 ? 'frase' : 'frases'}`;
+      paragraphsEl.textContent = `${paragraphs} ${paragraphs === 1 ? 'parágrafo' : 'parágrafos'}`;
+      readingTimeEl.textContent = words === 0 ? 'menos de 1 min de leitura' : `${minutes} min de leitura`;
     }
 
     txtEl.addEventListener('input', (e) => count(e.target.value));
   </script>
 
   <section class="prose dark:prose-invert mt-6">
-    <h2>Conte palavras e caracteres com precisão</h2>
-    <p>Este contador ajuda a ajustar textos a requisitos de tamanho, como redações, legendas e metadescrições. O cálculo é instantâneo e feito no seu navegador.</p>
+    <h2>Quando usar um contador de texto</h2>
+    <p>Um contador de palavras online é útil quando existe limite mínimo ou máximo de tamanho. Ele ajuda em trabalhos acadêmicos, resumos, textos para redes sociais, anúncios, currículos, e-mails profissionais e descrições para SEO.</p>
 
-    <h3>Exemplo prático</h3>
-    <p>Cole um parágrafo qualquer e veja as contagens mudarem em tempo real à medida que edita.</p>
+    <h3>Diferença entre palavras e caracteres</h3>
+    <p>Palavras são grupos de texto separados por espaços. Caracteres incluem letras, números, pontuação e espaços. Por isso um texto pode ter poucas palavras e ainda assim muitos caracteres.</p>
 
     <h3>Privacidade</h3>
-    <p>Não armazenamos o conteúdo digitado. Tudo acontece localmente, sem envio para servidores.</p>
+    <p>O texto digitado não é armazenado. A contagem acontece localmente no navegador, o que torna a ferramenta prática para rascunhos, textos pessoais e documentos de trabalho.</p>
   </section>
 
   <Faq faqs={faqs} />
