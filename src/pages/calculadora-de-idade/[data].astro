@@ -25,8 +25,7 @@ const now = new Date();
 const res = diffYMD(parsed, now);
 const title = `Idade de quem nasceu em ${data}`;
 ---
-<Base {title} description={`Veja a idade de quem nasceu em ${data}, em anos, meses e dias.`}>
-  <link rel="stylesheet" href="/src/styles/global.css">
+<Base {title} description={`Veja a idade de quem nasceu em ${data}, em anos, meses e dias.`} robots="noindex,follow">
   <h1 class="text-2xl font-semibold mb-4">{title}</h1>
   <p class="text-lg">Resultado agora: <strong>{res.y} anos, {res.m} meses e {res.d} dias</strong>.</p>
   <p class="mt-4"><a href="/calculadora-de-idade/">Calcular outra data</a></p>

@@ -13,8 +13,7 @@ const imc = p/(h*h);
 function cat(v){ if(v<18.5) return 'Abaixo do peso'; if(v<25) return 'Peso normal'; if(v<30) return 'Sobrepeso'; return 'Obesidade'; }
 const title = `IMC para ${peso}kg e ${altura}cm`;
 ---
-<Base {title} description={`Resultado de IMC para ${peso} kg e ${altura} cm.`}>
-  <link rel="stylesheet" href="/src/styles/global.css">
+<Base {title} description={`Resultado de IMC para ${peso} kg e ${altura} cm.`} robots="noindex,follow">
   <h1 class="text-2xl font-semibold mb-2">{title}</h1>
   <p class="text-lg">IMC: <strong>{imc.toFixed(1)}</strong> — {cat(imc)}</p>
   <p class="mt-4"><a href="/calculadora-de-imc/">Calcular outros valores</a></p>
